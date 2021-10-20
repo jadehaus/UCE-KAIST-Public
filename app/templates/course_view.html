@@ -1,0 +1,394 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} 수강 과목 목록 {% endblock %}
+
+
+{% block content %}
+
+<!-- Specific Page CSS goes HERE  -->
+<style>
+.space-below {
+  margin-below: 20px;
+}
+.collapse.show {
+  visibility: visible;
+}
+.collapse.in {
+  display: block;
+}
+tr.collapse.in {
+  display: table-row;
+}
+tbody.collapse.in {
+  display: table-row-group;
+}
+.dropdown {
+  position: relative;
+}
+.dropdown-toggle:focus {
+  outline: 0;
+}
+.dropdown-menu {
+  position: absolute;
+  display: none;
+}
+.dropdown-menu .divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+.dropdown-menu > li > a {
+  display: block;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #262626;
+  background-color: #f5f5f5;
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #337ab7;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #777;
+}
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  cursor: not-allowed;
+  background-color: transparent;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.open > .dropdown-menu {
+  display: block;
+}
+.open > a {
+  outline: 0;
+}
+
+.fixedTable {
+  table-layout: fixed;
+}
+#easyAdd {
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+#easyAdd:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+table { min-width: 800px; }
+.wrapper {
+    overflow: auto;
+}
+.content {
+    overflow-y: auto;
+}
+</style>
+
+    <main>
+        
+        {% include 'includes/preloader.html' %}
+
+        <!-- Hero -->
+        <section class="section-header pb-3 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">수강한 과목 목록</h1>
+                        <p class="lead mb-5">이곳에서 지금까지 수강 신청한 과목들을 학기별로 볼 수 있습니다. <br> 수강한 학기도 입력할 수 있습니다.</p>
+                        <div class="alert bg-secondary" role="alert">
+                            <span class="fas fa-info-circle"></span>
+                            또는 <a class="fw-bold text-white text-underline mx-1" data-bs-toggle="modal" data-bs-target="#modal-default" target="_blank">여기</a>에서 강력한 학사시스템 불러오기 기능을 사용해보세요.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-lg">
+            <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog"
+                aria-labelledby="modal-notification" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content bg-primary text-white">
+                        <div class="modal-header border-0">
+                            <button type="button" class="btn-close bg-gray-500" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="py-3 text-center">
+                                <span class="modal-icon display-1-lg"><span
+                                        class="fas fa-exclamation-circle" style="color: white"></span></span>
+                                <h2 class="h4 modal-title my-3">매화수 알림</h2>
+                                <br>
+                                <p class="px-lg-5">'개별연구'의 등록이 잘 되지 않을 수 있습니다.<br><br>
+                                    특히 학사시스템 불러오기 기능에서 개별연구 과목이 수강한 것보다 더 추가되었거나 덜 추가된 경우, <strong>개별연구 과목을 전체 목록에 여러개 더 추가해 놓았으므로</strong> 직접 '과목 추가하기' 탭에서 추가 또는 삭제를 진행해 주세요.
+                            이용에 불편을 드려 죄송합니다.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid wrapper">
+                <div class="row justify-content-center content">
+                    <div class="col-10 col-md-10 col-lg-10 text-center">
+<!--                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">-->
+<!--                            <span aria-hidden="false" class="fas fa-calendar-alt"></span>  수강 학기 정보 입력하기-->
+<!--                        </button>-->
+<!--                        <br>-->
+
+<!--                        <div class="collapse" id="collapseExample">-->
+<!--                          <div class="well">-->
+                        <h4 class="text-primary mb-1">학기 미입력 과목 목록</h4>
+                        <div class="table-responsive-lg">
+                              <table class="table table-responsive" id="unassigned">
+                                    <thead>
+                                      <tr>
+                                          <th>개설 학과</th>
+                                          <th>과목 구분</th>
+                                          <th>과목 코드</th>
+                                          <th>과목 이름</th>
+                                          <th>학점/AU</th>
+                                          <th></th>
+                                      </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for course in current_user.courses %}
+                                        {% if course.id | string in course_info %}
+                                        {% if course_info[course.id | string]["semester"] == None %}
+                                        <tr>
+                                            <td>{{ course.department }}</td>
+                                            <td>{{ course.subject_type }}</td>
+                                            <td>{{ course.code }}</td>
+                                            <td>{{ course.name }}</td>
+                                            <td>{{ course.credit }}</td>
+                                            <td>
+                                                <div class="dropdown" data-name='statuses'>
+                                                  <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="btndropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport">
+                                                      <span aria-hidden="true" class="fas fa-pencil-alt"></span>
+                                                  </button>
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick="delete_course({{ course.id }})">
+                                                    <span aria-hidden="true" class="fas fa-trash"></span>
+                                                    </button>
+                                                  <ul class="dropdown-menu" aria-labelledby="btndropdown">
+                                                      <li><a class="dropdown-item" selected>--</a></li>
+                                                      <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
+                                                      {% for year in range(current_user.admitted_year, year + 1) %}
+                                                      {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                      <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ year }}년도 {{ semester }}</a></li>
+                                                      {% endfor %}
+                                                      {% endfor %}
+                                                      <li class="divider"></li>
+                                                      <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
+                                                  </ul>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {% endif %}
+                                        {% endif %}
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                        </div>
+<!--                          </div>-->
+<!--                        </div>-->
+
+                        <br>
+
+                        <div id="assigned">
+                            {% if semesters == [] %}
+                            <p align="center">학기 정보가 입력된 과목이 없습니다.</p>
+                            {% else %}
+
+                            {% for semester in semesters %}
+                            <h4 class="text-primary mb-1">{% if semester == 'AP' %}기이수{% else %} {{ semester[0] }}년도 {{ semester[1] }} {% endif %}</h4>
+                            <div class="table-responsive-lg">
+                            <table class="table table-responsive mb-4">
+                                <thead>
+                                  <tr>
+                                      <th>개설 학과</th>
+                                      <th>과목 구분</th>
+                                      <th>과목 코드</th>
+                                      <th>과목 이름</th>
+                                      <th>학점/AU</th>
+                                      <th></th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                    {% for course in current_user.courses %}
+                                    {% if (course.id | string) in course_info %}
+                                    {% if course_info[course.id | string]["semester"] == semester %}
+                                    <tr>
+                                        <td>{{ course.department }}</td>
+                                        <td>{{ course.subject_type }}</td>
+                                        <td>{{ course.code }}</td>
+                                        <td>{{ course.name }}</td>
+                                        <td>{{ course.credit }}</td>
+                                        <td>
+                                            <div class="dropdown" data-name='statuses'>
+                                              <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="btndropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport">
+                                                  <span aria-hidden="true" class="fas fa-pencil-alt"></span>
+                                              </button>
+                                                <button type="button" class="btn btn-danger btn-sm" onclick="delete_course({{ course.id }})">
+                                                <span aria-hidden="true" class="fas fa-trash"></span>
+                                                </button>
+                                              <ul class="dropdown-menu" aria-labelledby="btndropdown">
+                                                  <li><a class="dropdown-item" selected>--</a></li>
+                                                  <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
+                                                  {% for year in range(current_user.admitted_year, year + 1) %}
+                                                  {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                  <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ year }}년도 {{ semester }}</a></li>
+                                                  {% endfor %}
+                                                  {% endfor %}
+                                                  <li class="divider"></li>
+                                                  <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
+                                              </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    {% endif %}
+                                    {% endif %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                            </div>
+                            <br><br>
+                            {% endfor %}
+                            {% endif %}
+                            <br><br><br><br><br><br><br><br><br><br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal Content -->
+            <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="h6 modal-title">쉽고 빠른 과목 추가하기(학사시스템)</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>*해당 방법은 학사시스템의 로그인을 필요로 합니다.</p>
+                            <ol>
+                                <li>학사시스템(https://cais.kaist.ac.kr/grade)에 로그인하여<br> <strong>성적 > 성적조회</strong> 클릭.</li>
+                                <li>Chrome의 경우, 화면에서 <strong>마우스 우클릭</strong> 후<br> 가장 아래 보이는 <strong>검사</strong> (페이지 소스보기 아래) 클릭.</li>
+                                <li>검사창 가장 위 <strong>console</strong> 창 클릭 후,<br> 아래 코드를 <strong>콘솔 창에 복사 붙여넣기</strong>.</li>
+                                    <p><small>let el = document.getElementById("gradeContent");<br>
+                                    let rows = el.querySelectorAll("tr");<br>
+                                    let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
+                                    let ccrows = Array.from(crows).filter(cr => {return ((cr.querySelector("td:nth-of-type(11)").innerText != 'R') && (cr.querySelector("td:nth-of-type(11)").innerText != 'W'));});<br>
+                                    let courses = ccrows.map(cr => {<br>
+                                    return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
+                                            "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
+                                            "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
+                                            "name": cr.querySelector("td:nth-of-type(7)").innerText};});<br>
+                                    console.log(JSON.stringify(courses));</small></p>
+                                <li>콘솔창 아래 출력된 결과값을 아래 텍스트 상자에 입력하면 현재까지 수강한 과목들이<strong>(재수강 및 드랍 과목 제외)</strong> 성공적으로 반영됩니다.</li>
+                            </ol>
+                            <strong>&nbsp; *일부 개별연구와 기이수 과목들의 경우(e.g. 한국과학영재학교 자유선택 AP 과목) 반영되지 않을 수 있습니다.</strong>
+                            <input type="text" class="form-control" id="courseAdd">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link ms-auto"
+                                data-bs-dismiss="modal" onclick="quickAdd()">적용</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- End of Modal Content -->
+        </section>
+
+    </main>
+
+<script>
+    $(window).on('load', function() {
+        $('#modal-notification').modal('show');
+    });
+    $(document).ready(function(){
+        });
+    function edit_course(semester, id){
+        $.ajax({
+            url:'/edit_course',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id,
+                semester: semester
+            })
+
+        }).done(function(res){
+            $("#unassigned").load(location.href+" #unassigned>*","");
+            $("#assigned").load(location.href+" #assigned>*","");
+
+        });
+    }
+    function delete_course(id){
+      $.ajax({
+            url:'/add_or_delete_course',
+            contentType : 'application/json',
+            method:'DELETE',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#unassigned").load(location.href+" #unassigned>*","");
+            $("#assigned").load(location.href+" #assigned>*","");
+
+        });
+    }
+    function edit_letter(obj, id){
+        var letter = obj.value
+        $.ajax({
+            url:'/edit_letter',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id,
+                letter: letter
+            })
+
+        }).done(function(res){
+            $("#assigned").load(location.href+" #assigned>*","");
+
+        });
+    }
+    function quickAdd(){
+        var txt = document.getElementById("courseAdd").value;
+        $.ajax({
+            url:'/quick_add',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                txt: txt
+            })
+
+        }).done(function(res){
+            window.location.reload();
+        });
+    }
+</script>
+
+<script>
+function openForm() {
+  document.getElementById("myForm").style.display = "block";
+}
+
+.form-popup {
+  display: none;
+  }
+</script>
+
+{% include 'includes/footer.html' %}
+{% endblock content %}

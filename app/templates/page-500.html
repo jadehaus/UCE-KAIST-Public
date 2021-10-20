@@ -1,0 +1,42 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Error 500 {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <main>
+
+        <!-- Section -->
+        <section class="min-vh-100 d-flex align-items-center section-image overlay-soft-dark">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 d-flex align-items-center justify-content-center">
+                        <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
+
+                            <div class="text-center text-md-center mb-4 mt-md-0">
+                                <h1 class="mb-0 h3">
+                                    Error 500
+                                </h1>
+                                <br />
+                                <p>
+                                    이용에 불편함을 드려 죄송합니다.<br>
+                                    아래 구글 설문을 통해 버그 제보를 해주시면, 최대한 빠르게 문제 해결을 위해 노력하겠습니다.<br><br><br>
+                                    <a href="https://forms.gle/mZ6UoD47ZVY6DzEM8"
+                                    class="btn btn-primary d-none d-lg-inline me-md-3"><span class="fas fa-bug me-2"></span> 버그 제보 및 피드백</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

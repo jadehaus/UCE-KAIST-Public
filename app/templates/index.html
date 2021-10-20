@@ -1,0 +1,498 @@
+<!--
+
+=========================================================
+* Pixel Free Bootstrap 5 UI Kit
+=========================================================
+
+* Product Page: https://themesberg.com/product/ui-kit/pixel-free-bootstrap-5-ui-kit
+* Copyright 2021 Themesberg (https://www.themesberg.com)
+
+* Coded by https://themesberg.com
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software. Contact us if you want to remove it.
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<!-- Primary Meta Tags -->
+<title>
+    매화수, KAIST 학부 졸업 길라잡이
+</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta name="title" content="매화수, KAIST 학부 졸업 길라잡이">
+<meta name="author" content="Minu Kim">
+<meta name="description" content="매화수, KAIST 학부 졸업 길라잡이">
+<link rel="canonical" href="#">
+
+<!-- Favicon -->
+<link rel="apple-touch-icon" sizes="120x120" href="/static/assets/img/favicon/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/static/assets/img/favicon/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/static/assets/img/favicon/favicon-16x16.png">
+<link rel="manifest" href="/static/assets/img/favicon/site.webmanifest">
+<link rel="mask-icon" href="/static/assets/img/favicon/safari-pinned-tab.svg" color="#ffffff">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+
+<!-- Fontawesome -->
+<link type="text/css" href="/static/assets/vendor/@fortawesome/fontawesome-free/css/all.min.css" rel="stylesheet">
+
+<!-- Pixel CSS -->
+<link type="text/css" href="/static/assets/css/pixel.css" rel="stylesheet">
+
+</head>
+<body>
+
+    {% block body -%}
+    {% block scripts %}
+    <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+    <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+    {%- endblock scripts %}
+    {%- endblock body -%}
+    
+    {% include 'includes/navigation.html' %}
+
+    <main>
+
+<!--        {% include 'includes/preloader.html' %}-->
+
+        <!-- Hero -->
+        <section class="section-header overflow-hidden pt-7 pt-lg-8 pb-9 pb-lg-12 bg-primary text-white" style="height: 1%">
+            <div class="container less-bottom">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="animated animatedFadeInUp fadeInUp">
+                        <h1 class="fw-bolder display-1">
+                            &nbsp;&nbsp;&nbsp;&nbsp;매화수
+                            <span class="pixel-pro-badge fw-bolder text-dark" >BETA</span>
+                        </h1>
+                        <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
+                            하나뿐인 KAIST 학부 졸업 길라잡이
+                        </h2>
+                        <div class="d-flex justify-content-center flex-column mb-6 mb-lg-5">
+                        <a class="d-block text-center mx-auto" target="_blank">
+                            <span class="text-muted font-small">
+                                &copy; Minu Kim
+                            </span>
+                        </a>
+                        </div>
+                        <!-- Button Modal -->
+                        <br><br><br>
+                        </div>
+                        <div class="animated animatedFadeInUp fadeInUp delay-more">
+                        <div class="d-flex justify-content-center delay-more">
+                            {% if current_user.is_authenticated %}
+                            <div class="col-6 col-md-6 text-center">
+                                <button type="button" class="btn btn-white animate-up-2" style="width:220px" data-bs-toggle="modal" data-bs-target="#modal-default">
+                                학사시스템에서 불러오기</button>
+                                <br>
+                                <p class="d-none d-lg-block" align="center" style="margin:30px">학사시스템에 접속한 후 지금까지 수강한 과목을<br> 버튼 클릭 한번으로 추가할 수 있습니다.</p>
+                            </div>
+                            <div class="col-6 col-md-6 text-center">
+                                <button type="button" onClick="window.location.href='{{ url_for( 'course_add' ) }}';" class="btn btn-tertiary animate-up-2" style="width:220px">
+                                과목 직접 추가하기</button>
+                                <br>
+                                <p class="d-none d-lg-block" align="center" style="margin:30px">학점이나 학기 등의 정보를 입력하고 싶지 않은 경우,<br>
+                                직접 과목을 수동으로 추가할 수 있습니다.</p>
+                            </div>
+                            {% else %}
+                            <div class="col-12 col-md-12 text-center">
+                            <button type="button" onClick="window.location.href='{{ url_for( 'login' ) }}';" class="btn btn-tertiary animate-up-2" style="width:220px">
+                                시작하기</button>
+
+                            <div class="arrow bounce">
+                              <a class="fa fa-arrow-down fa-2x move-up"></a>
+                            </div>
+                            {% endif %}
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2"><svg class="fill-white"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
+                <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>
+            </svg></figure>
+        </section>
+
+        <section class="section section-lg">
+
+
+            <div class="container item hidden">
+                <div class="row justify-content-center mb-5 mb-lg-6">
+                    <div class="col-6 col-md-3 text-center mb-4">
+                        <div class="icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+                            <span class="fas fa-puzzle-piece text-tertiary"></span>
+                        </div>
+                        <h3 class="fw-bolder">Curriculum</h3>
+                        <p class="text-gray">직접 짜맞춰보는 학업 계획</p>
+                    </div>
+                    <div class="col-6 col-md-3 text-center mb-4">
+                        <div class="icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+                            <span class="fas fa-pager text-tertiary"></span>
+                        </div>
+                        <h3 class="fw-bolder">Simple</h3>
+                        <p class="text-gray">간결하고 단순한 UI</p>
+                    </div>
+                    <div class="col-6 col-md-3 text-center">
+                        <div class="icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+                            <span class="fas fa-check-circle text-tertiary"></span>
+                        </div>
+                        <h3 class="fw-bolder">Accurate</h3>
+                        <p class="text-gray">꼼꼼한 이수 요건 확인</p>
+                    </div>
+                    <div class="col-6 col-md-3 text-center">
+                        <div class="icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
+                            <span class="fas fa-chart-pie text-tertiary"></span>
+                        </div>
+                        <h3 class="fw-bolder">Analysis</h3>
+                        <p class="text-gray">한눈에 확인하는 졸업</p>
+                    </div>
+                </div>
+            </div>
+
+            {% if current_user.is_authenticated %}
+            {% else %}
+            <div class="container item hidden">
+                <div class="row justify-content-center justify-content-lg-between align-items-center mb-5 mb-lg-6">
+                    <div class="col-12 col-md-8 col-lg-6 text-center text-lg-left">
+                        <h1 class="display-3 mb-0">우리가 직접 만들어가는<br> 프로그램, 매화수.</h1>
+                        <p class="lead fw-normal text-muted mt-4 mb-4 mb-lg-5">매화수는 과목 수강 설계를 도와주는 프로그램입니다.<br> 앞으로는 카이스트 학생이라면 누구나 참여할 수 있는 오픈소스 프로젝트로 확대할 계획입니다. (혼자 만들고 유지하는건 버거우니까요.)</p>
+                        </div>
+                    <div class="col-12 col-lg-5 d-none d-lg-block">
+                        <img src="static/assets/img/etc/analysis2.svg" alt="">
+                    </div>
+                </div>
+            </div>
+
+            <div class="container item hidden">
+                <div class="row justify-content-center mb-5 mb-lg-6">
+                    <div class="col-12 col-lg-6">
+                        <div class="d-flex flex-wrap justify-content-lg-start">
+                            <h2 class="h2 text-center text-lg-left mb-5">매화수는 어떤 프로그램인가요?</h2>
+                            <div class="my-4">
+                                <div class="d-flex">
+                                    <div class="me-3 me-md-4">
+                                        <div class="icon icon-md icon-secondary-app">
+                                            <span class="fas fa-shield-alt"></span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="h4">매화수의 시작은 엑셀</h3>
+                                        <p>
+                                            매화수는 본래 졸업 요건 확인을 돕는 엑셀 파일이었습니다. 엑셀은 사용자가 쉽게 함수를 수정하고 정보를 변경할 수 있다는 장점이 있지만, 업데이트 및 추가 기능 등을 제공하기 어렵다는 단점이 있었습니다.
+                                            초기에 배포했던 엑셀 파일은 <a href="https://drive.google.com/drive/folders/1of8QvBe0rTh6NvzFkeoue7LiTwsWuY62?fbclid=IwAR3Qy3cAsjO5yHcFPQgvussTSLzZsNahBWmUR35yAOsIFKWWBG8_wp4iPIs">여기</a>에서 확인할 수 있습니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="d-flex">
+                                    <div class="me-3 me-md-4">
+                                        <div class="icon icon-md icon-secondary-app">
+                                            <span class="fas fa-user-circle"></span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="h4">새롭게 만들어진 웹배전, 매화수</h3>
+                                        <p>
+                                        새롭게 웹사이트로 만들어진 매화수는 언제 어디서든 쉽고 간편하게 졸업 요건을 확인할 수 있도록 제작되었습니다. 나아가, 사용자의 익명 데이터들을 기반으로 AI 등을 활용해 스마트한 과목 추천 시스템을 구현할 예정입니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="my-4">
+                                <div class="d-flex">
+                                    <div class="me-3 me-md-4">
+                                        <div class="icon icon-md icon-secondary-app">
+                                            <span class="fas fa-file-alt"></span>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <h3 class="h4">함께 만들어가는 프로젝트, 매화수</h3>
+                                        <p>
+                                        매화수에는 아직 많은 기능이 없습니다. 하지만, 여러분이 도와주신다면 (제발) 다채로운 매화수를 함께 만들어갈 수 있을 것입니다.
+                                        베타 테스팅 기간이 끝난 이후에 매화수를 함께 개발할 분을 공개적으로 모집할 예정입니다.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex col-12 col-lg-6 align-items-center justify-content-center">
+                        <img class="d-none d-lg-inline-block" src="static/assets/img/etc/pie_chart.svg" alt="">
+                    </div>
+                </div>
+                <div class="col-12 col-md-12 text-center">
+                <button type="button" onClick="window.location.href='{{ url_for( 'login' ) }}';" class="btn btn-tertiary animate-up-2" style="width:220px">
+                    알겠으니까 이제 시작할래</button>
+                </div>
+            </div>
+
+            <div class="container item hidden">
+                <div class="row mt-6 mt-lg-6 mb-5 mb-lg-6">
+                    <div class="col-md-4 text-left text-md-right">
+                        <p class="lead fw-bold text-dark">안녕하세요, 매화수 개발자인<br> 수리과학과 학사과정 김민우입니다. <br>매화수 베타 버전 웹사이트에 접속해주신<br> 여러분께 진심으로 감사드립니다.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p><a href="https://drive.google.com/drive/folders/1of8QvBe0rTh6NvzFkeoue7LiTwsWuY62?fbclid=IwAR3Qy3cAsjO5yHcFPQgvussTSLzZsNahBWmUR35yAOsIFKWWBG8_wp4iPIs">엑셀 버전의 매화수</a>를 접해보신 분들은 아시겠지만, 매화수는 졸업 요건을 계산해주고 과목 수강 설계를 도와주는 프로그램입니다.
+                            2학년 이상의 학생은 학교 학사시스템의 졸업관리시스템을 사용할 수 있지만, 학교의 졸업관리시스템은 <strong>"앞으로 내가 무슨 과목을 더 들어야 졸업할 수 있지?"</strong>와 같은 질문에 대한 대답을 효과적으로 알려주진 못했습니다. 그리고 갓 입학한 새내기들은 아예 졸업관리시스템을 사용할 수도 없지요.</p>
+                        <p class="d-none d-lg-block">정확한 졸업 요건을 계산해준다는 점에서 졸업을 앞둔 고학년에게는 학교의 시스템이 훨씬 중요하겠지만, 저학년 학생들에게는 앞으로의 수강 설계가 훨씬 중요하므로 학교의 시스템이 지원해주지 못한 무언가를 만들고 싶다는 생각이 있었습니다.</p>
+                    </div>
+                    <div class="col-md-4">
+                        <p>이번에 새롭게 웹사이트 매화수는, 이러한 과목 설계 기능에 초점을 두고 만들어졌습니다. 비록 아직은 간단한 졸업 요건 계산 등의 기능만이 기초적으로 구현되어 있지만, 앞으로 사용자가 늘어난다면 축적된 데이터를 바탕으로 <strong>'학업 계획 설계'</strong>에 충실한 매화수를 만들어갈 수 있을 것입니다.</p>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+            {% if current_user.id == 1 %}
+            <div class="section section-lg">
+                <div class="container">
+                    <div class="row justify-content-center">
+                        <div class="col-12 text-center">
+                        <h2 class="lead fw-bolder display-2">
+                            관리자 정보 패널
+                        </h2>
+                            <br>
+                        </div>
+                    </div>
+                    <div class="row justify-content-center">
+                        <!--Counter-->
+                        <div class="col-12 col-sm-6 mb-3 col-lg-3 mb-5 mb-lg-0 text-center">
+                            <div class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2">
+                                <span class="fas fa-users"></span>
+                            </div>
+                            <span class="counter display-3 text-primary d-block" val="{{ n1 }}">0</span>
+                            <span class="h5 text-gray">매화수 사용자 수</span>
+                        </div>
+                        <!--End of Counter-->
+                        <!--Counter-->
+                        <div class="col-12 col-sm-6 mb-3 col-lg-3 mb-5 mb-lg-0 text-center">
+                            <div class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2">
+                                <span class="fas fa-book"></span>
+                            </div>
+                            <span class="counter display-3 text-secondary d-block" val="{{ n2 }}">0</span>
+                            <span class="h5 text-gray">등록된 과목 수</span>
+                        </div>
+                        <!--End of Counter-->
+                        <!--Counter-->
+                        <div class="col-12 col-sm-6 mb-3 col-lg-3 mb-5 mb-lg-0 text-center">
+                            <div class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2">
+                                <span class="fas fa-school"></span>
+                            </div>
+                            <span class="counter display-3 text-primary d-block" val="17">0</span>
+                            <span class="h5 text-gray">등록된 학과 수</span>
+                        </div>
+                        <!--End of Counter-->
+                        <!--Counter-->
+                        <div class="col-12 col-sm-6 mb-3 col-lg-3 mb-5 mb-lg-0 text-center">
+                            <div class="icon icon-shape icon-shape-primary rounded-circle me-2 me-md-0 mb-2">
+                                <span class="far fa-comments"></span>
+                            </div>
+                            <span class="counter display-3 text-dark d-block" val="2">0</span>
+                            <span class="h5 text-gray">피드백 응답 수</span>
+                        </div>
+                        <!--End of Counter-->
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+
+            <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+            aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="h6 modal-title">쉽고 빠른 과목 추가하기(학사시스템)</h2>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            <p>*해당 방법은 학사시스템의 로그인을 필요로 합니다.</p>
+                            <ol>
+                                <li>학사시스템(https://cais.kaist.ac.kr/grade)에 로그인하여<br> <strong>성적 > 성적조회</strong> 클릭.</li>
+                                <li>Chrome의 경우, 화면에서 <strong>마우스 우클릭</strong> 후<br> 가장 아래 보이는 <strong>검사</strong> (페이지 소스보기 아래) 클릭.</li>
+                                <li>검사창 가장 위 <strong>console</strong> 창 클릭 후,<br> 아래 코드를 <strong>콘솔 창에 복사 붙여넣기</strong>.</li>
+                                    <p><small>let el = document.getElementById("gradeContent");<br>
+                                    let rows = el.querySelectorAll("tr");<br>
+                                    let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
+                                    let ccrows = Array.from(crows).filter(cr => {return ((cr.querySelector("td:nth-of-type(11)").innerText != 'R') && (cr.querySelector("td:nth-of-type(11)").innerText != 'W'));});<br>
+                                    let courses = ccrows.map(cr => {<br>
+                                    return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
+                                            "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
+                                            "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
+                                            "name": cr.querySelector("td:nth-of-type(7)").innerText};});<br>
+                                    console.log(JSON.stringify(courses));</small></p>
+                                <li>콘솔창 아래 출력된 결과값을 아래 텍스트 상자에 입력하면 현재까지 수강한 과목들이<strong>(재수강 및 드랍 과목 제외)</strong> 성공적으로 반영됩니다.</li>
+                            </ol>
+                            <strong>&nbsp; *일부 개별연구와 기이수 과목들의 경우 반영되지 않을 수 있습니다.</strong>
+                            <input type="text" class="form-control" id="courseAdd" onchange="quickAdd()">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-link ms-auto"
+                                data-bs-dismiss="modal">적용</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <script>
+        var $fade =  $(".item");
+
+        $(window).scroll(function () {
+            $fade.each(function () {
+
+                fadeMiddle = $(this).offset().top + (0.4 *$(this).height());
+                windowBottom = $(window).scrollTop() + $(window).height();
+
+                if (fadeMiddle < windowBottom) {
+                  $(this).removeClass("hidden");
+                  $(this).addClass("fast-animated animatedFadeInUp fadeInUp");
+                }
+            });
+        });
+
+        $(window).scroll();
+
+        const counters = document.querySelectorAll('.counter');
+        const speed = 200;
+
+        counters.forEach( counter => {
+           const animate = () => {
+              const value = +counter.getAttribute('val');
+              const data = +counter.innerText;
+
+              const time = value / speed;
+             if(data < value) {
+                  counter.innerText = Math.ceil(data + time);
+                  setTimeout(animate, 1);
+                }else{
+                  counter.innerText = value;
+                }
+
+           }
+
+           animate();
+        });
+        $(document).ready(function(){
+            });
+        function quickAdd(){
+            var txt = document.getElementById("courseAdd").value;
+            $.ajax({
+                url:'/quick_add',
+                contentType : 'application/json',
+                method:'PUT',
+                data : JSON.stringify({
+                    txt: txt
+                })
+
+            }).done(function(res){
+            window.location = res;
+            });
+        }
+        </script>
+        <style>
+            .hidden {
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s 0.5s, opacity 0.5s linear;
+            }
+            .less-bottom {
+                margin-bottom: -220px;
+            }
+            @keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            @-webkit-keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            .animated {
+                animation-delay: 1s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .fast-animated{
+                animation-delay: 0s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .delay-more {
+              animation-delay: 2s;
+            }
+
+            .animatedFadeInUp {
+                opacity: 0
+            }
+
+            .fadeInUp {
+                opacity: 0;
+                animation-name: fadeInUp;
+                -webkit-animation-name: fadeInUp;
+            }
+            .arrow {
+              text-align: center;
+              margin: 8% 0;
+            }
+            .bounce {
+              -moz-animation: bounce 2s infinite;
+              -webkit-animation: bounce 2s infinite;
+              animation: bounce 2s infinite;
+            }
+            .move-up {
+                top: -100px;
+            }
+
+            @keyframes bounce {
+              0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-30px);
+              }
+              60% {
+                transform: translateY(-15px);
+              }
+            }
+        </style>
+
+
+    </main>
+
+    {% include 'includes/footer.html' %}
+
+    {% include 'includes/scripts.html' %}
+
+</body>
+</html>

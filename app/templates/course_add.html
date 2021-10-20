@@ -1,0 +1,343 @@
+{% extends 'layouts/base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block title %} 과목 추가하기 {% endblock %}
+
+{% block content %}
+
+    <main>
+
+        {% include 'includes/preloader.html' %}
+
+        <!-- Hero -->
+        <section class="section-header pb-3 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">과목 추가하기</h1>
+                        <p class="lead mb-5">지금까지 수강한 과목 또는 앞으로 수강할 과목을 추가할 수 있습니다. <br> 간편한 검색 기능과 강력한 학사시스템 불러오기 기능을 활용해보세요.</p>
+                        <div class="alert bg-secondary" role="alert">
+                            <span class="fas fa-info-circle"></span>
+                            또는 <a class="fw-bold text-white text-underline mx-1" data-bs-toggle="modal" data-bs-target="#modal-default" target="_blank">여기</a>에서 강력한 학사시스템 불러오기 기능을 사용해보세요.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-lg">
+            <div class="container-fluid">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-10 text-center">
+                        <div class="input-group">
+                            <input type="text" class="form-control" id="courseName" placeholder="과목 이름, 개설 학과, 과목 코드 등으로 검색 (예: 수리과학과 전공선택)" aria-describedby="basic-addon2">
+                                <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
+                        </div>
+                        <br>
+                        <div class="table-responsive-lg">
+                        <table class="table table-hover display nowrap" id="courseTable" style="width:100%" width="100%">
+                            <thead>
+                            <tr>
+                                <th>개설 학과 <span class="fas fa-sort-down"></span></th>
+                                <th>구분 <span class="fas fa-sort-down"></span></th>
+                                <th>코드 <span class="fas fa-sort-down"></span></th>
+                                <th>과목 이름 <span class="fas fa-sort-down"></span></th>
+                                <th>학점 <span class="fas fa-sort-down"></span></th>
+                                <th></th>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                        </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <button class="btn btn-sm btn-primary" type="button" onclick="topFunction()" id="topBtn" title="Go to top">
+            맨 위로
+        </button>
+        <!-- Modal Content -->
+        <div class="modal fade" id="modal-default" tabindex="-1" role="dialog" aria-labelledby="modal-default"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="h6 modal-title">쉽고 빠른 과목 추가하기(학사시스템)</h2>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"
+                            aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>*해당 방법은 학사시스템의 로그인을 필요로 합니다.</p>
+                        <ol>
+                            <li>학사시스템(https://cais.kaist.ac.kr/grade)에 로그인하여<br> <strong>성적 > 성적조회</strong> 클릭.</li>
+                            <li>Chrome의 경우, 화면에서 <strong>마우스 우클릭</strong> 후<br> 가장 아래 보이는 <strong>검사</strong> (페이지 소스보기 아래) 클릭.</li>
+                            <li>검사창 가장 위 <strong>console</strong> 창 클릭 후,<br> 아래 코드를 <strong>콘솔 창에 복사 붙여넣기</strong>.</li>
+                                <p><small>let el = document.getElementById("gradeContent");<br>
+                                    let rows = el.querySelectorAll("tr");<br>
+                                    let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
+                                    let ccrows = Array.from(crows).filter(cr => {return ((cr.querySelector("td:nth-of-type(11)").innerText != 'R') && (cr.querySelector("td:nth-of-type(11)").innerText != 'W'));});<br>
+                                    let courses = ccrows.map(cr => {<br>
+                                    return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
+                                            "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
+                                            "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
+                                            "name": cr.querySelector("td:nth-of-type(7)").innerText};});<br>
+                                    console.log(JSON.stringify(courses));</small></p>
+                            <li>콘솔창 아래 출력된 결과값을 아래 텍스트 상자에 입력하면 현재까지 수강한 과목들이<strong>(재수강 및 드랍 과목 제외)</strong> 성공적으로 반영됩니다.</li>
+                        </ol>
+                        <strong>&nbsp; *일부 개별연구와 기이수 과목들의 경우(e.g. 한국과학영재학교 자유선택 AP 과목) 반영되지 않을 수 있습니다.</strong>
+                        <input type="text" class="form-control" id="courseAdd" onchange="quickAdd()">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-link ms-auto"
+                            data-bs-dismiss="modal">적용</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End of Modal Content -->
+    </main>
+
+<style>
+    ul { display: flex; }
+    ul li { margin-left: 20px; }
+</style>
+<style>
+.space-below {
+  margin-below: 20px;
+}
+.collapse.show {
+  visibility: visible;
+}
+.collapse.in {
+  display: block;
+}
+tr.collapse.in {
+  display: table-row;
+}
+tbody.collapse.in {
+  display: table-row-group;
+}
+.dropdown {
+  position: relative;
+}
+.dropdown-toggle:focus {
+  outline: 0;
+}
+.dropdown-menu {
+  position: absolute;
+  display: none;
+}
+.dropdown-menu .divider {
+  height: 1px;
+  margin: 9px 0;
+  overflow: hidden;
+  background-color: #e5e5e5;
+}
+.dropdown-menu > li > a {
+  display: block;
+}
+.dropdown-menu > li > a:hover,
+.dropdown-menu > li > a:focus {
+  color: #262626;
+  background-color: #f5f5f5;
+}
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+  color: #fff;
+  text-decoration: none;
+  background-color: #337ab7;
+  outline: 0;
+}
+.dropdown-menu > .disabled > a,
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  color: #777;
+}
+.dropdown-menu > .disabled > a:hover,
+.dropdown-menu > .disabled > a:focus {
+  cursor: not-allowed;
+  background-color: transparent;
+  filter: progid:DXImageTransform.Microsoft.gradient(enabled = false);
+}
+.open > .dropdown-menu {
+  display: block;
+}
+.open > a {
+  outline: 0;
+}
+
+#topBtn {
+  display: none; /* Hidden by default */
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  left: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+#topBtn:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+#easyAdd {
+  position: fixed; /* Fixed/sticky position */
+  bottom: 20px; /* Place the button at the bottom of the page */
+  right: 30px; /* Place the button 30px from the right */
+  z-index: 99; /* Make sure it does not overlap */
+  cursor: pointer; /* Add a mouse pointer on hover */
+}
+
+#easyAdd:hover {
+  background-color: #555; /* Add a dark-grey background on hover */
+}
+
+body {
+}
+.lightgray {
+  color: lightgray
+}
+table { min-width: 777px; }
+</style>
+
+<script src="https://cdn.datatables.net/t/bs-3.3.6/jqc-1.12.0,dt-1.10.11/datatables.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#courseTable").DataTable({
+            lengthChange: false,
+            "pageLength": 20,
+            searching: true,
+            ordering: true,
+            info: true,
+            paging: true,
+            responsive: true,
+            "scrollX": true,
+            dom: 't<"row justify-content-right align-items-start mt-4"<"col-lg-6 col-sm-12"p><"col-lg-6 d-none d-lg-block text-right"i>>',
+            "createdRow": function ( row, data, dataIndex ) {
+                if ( data['taken'] == 1 ) {
+                    $('td', row).addClass('lightgray');
+                    }
+            },
+            "ajax": {
+                "url": "/get_course_table",
+                "dataType": "json",
+                "dataSrc": "data",
+                "contentType":"application/json"
+            },
+            "columns": [
+                {"data": "department"},
+                {"data": "type"},
+                {"data": "code"},
+                {"data": "name"},
+                {"data": "credit"},
+                {"data": "taken"},
+                {"data": "id"},
+                {"data": null}
+                ],
+            "columnDefs": [
+                { "width": "20%", "targets": 0 },
+                { "width": "40%", "targets": 3 },
+                { "targets": 5, "visible": false, "searchable": false },
+                { "targets": 6, "visible": false, "searchable": false },
+                { "targets": 7, render: function (a, b, data, d) {
+                        if (data['taken'] == 0) {
+                            return '<button class="btn btn-primary btn-sm" type="button"><span aria-hidden="true" class="fas fa-check"></span></button>';
+                        }
+                        return '<button type="button" class="btn btn-danger btn-sm"><span aria-hidden="true" class="fas fa-trash"></span></button>';
+                    }
+                    }
+                ]
+            });
+        $('#courseName').on('keyup',function(){
+          $('#courseTable').DataTable().search($(this).val()).draw();
+        });
+
+        $('#courseTable tbody').on('click', '.btn-primary', function (e) {
+            var data = $('#courseTable').DataTable().row( $(this).parents('tr') ).data();
+            $(this).removeClass('btn-primary')
+            $(this).addClass('btn-white')
+            add_course(data['id']);
+            $('#courseTable').DataTable().ajax.reload();
+        });
+
+
+        $('#courseTable tbody').on('click', '.btn-danger', function (e) {
+            var data = $('#courseTable').DataTable().row( $(this).parents('tr') ).data();
+            delete_course(data['id']);
+            $('#courseTable').DataTable().ajax.reload();
+        });
+    });
+</script>
+
+
+<script>
+    $(document).ready(function(){
+        });
+    function quickAdd(){
+        var txt = document.getElementById("courseAdd").value;
+        $.ajax({
+            url:'/quick_add',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                txt: txt
+            })
+
+        }).done(function(res){
+            window.location = res;
+        });
+    }
+    function add_course(id){
+        $.ajax({
+            url:'/add_or_delete_course',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#courseTable").DataTable().ajax.reload();
+        });
+    }
+    function delete_course(id){
+        $.ajax({
+            url:'/add_or_delete_course',
+            contentType : 'application/json',
+            method:'DELETE',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+           $("#courseTable").DataTable().ajax.reload();
+        });
+    }
+</script>
+
+<script>
+//Get the button:
+mybutton = document.getElementById("topBtn");
+
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+  if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+    mybutton.style.display = "block";
+  } else {
+    mybutton.style.display = "none";
+  }
+}
+
+// When the user clicks on the button, scroll to the top of the document
+function topFunction() {
+  window.scrollTo({top: 0, behavior: 'smooth'})
+  // document.body.scrollTop = 0; // For Safari
+  // document.documentElement.scrollTop = 0; // For Chrome, Firefox, IE and Opera
+}
+
+</script>
+
+{% include 'includes/footer.html' %}
+{% endblock content %}

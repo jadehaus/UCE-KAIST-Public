@@ -1,0 +1,942 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} 매화수 졸업 요건 분석 {% endblock %}
+
+{% block content %}
+<style>
+.space-left {
+  margin-left: 5px;
+}
+.fixedTable {
+  table-layout: fixed;
+}
+.progress-animation {
+    animation: progressbar 5s ease-out;
+}
+.on-top {
+  margin: 0 auto;
+    width: 100%;
+    min-height: 436px;
+    position: absolute;
+}
+@keyframes progressbar {
+  0%  {
+    width: 0%;
+  }
+  100% {
+    width: {{ current_user.graduate_percent() }}%;
+  }
+}
+
+.visible {
+  visibility: visible;
+  opacity: 1;
+  transition: opacity 0.5s linear;
+}
+
+.hidden {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s 0.5s, opacity 0.5s linear;
+}
+
+.classname {
+  -webkit-animation-name: fadeIn;
+  -webkit-animation-duration: 3s;
+  -webkit-animation-timing-function: ease;
+}
+.delay-more {
+  animation-delay: 3s
+}
+@keyframes fadeIn {
+    from {
+        opacity: 0
+    }
+
+    to {
+        opacity: 1;
+        visibility: visible
+    }
+}
+.summary { min-width: 777px; }
+.courses { min-width: 666px; }
+p { margin:0 }
+</style>
+
+    <main>
+        
+        {% include 'includes/preloader.html' %}
+
+        <!-- Hero -->
+        <section class="section-header pb-3 bg-primary text-white">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">졸업 요건 분석</h1>
+                        <p class="lead mb-5">학과 및 전공을 선택하면 졸업 요건을 확인할 수 있습니다. <br> 또한 졸업까지 남은 교과목을 확인할 수도 있습니다.</p>
+                        <div class="alert bg-secondary" role="alert">
+                            <span class="fas fa-info-circle"></span>
+                             혹시 요건 계산이 이상하다면, <a class="fw-bold text-white text-underline mx-1" href="https://forms.gle/mZ6UoD47ZVY6DzEM8" target="_blank">여기</a>에 알려주세요. 함께 매화수를 발전시켜보아요.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-lg" id="wholeSection">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <!--학과 및 전공 선택란-->
+                    <div class="row visible" id="info">
+
+                        <!--학과 선택 Form 카드-->
+                        <div class="col-12 d-flex align-items-stretch">
+                            <div class="card shadow text-center" id="card">
+                                <!-- Header -->
+                                <div class="card-header bg-white p-3">
+                                    <h3 class="text-primary">학과 및 전공 선택하기</h3>
+                                </div>
+                                <!-- End Header -->
+                                <!-- Content -->
+                                <div class="card-body">
+                                    <!--주전공 선택-->
+                                    <div class="row mt-3">
+                                    <div class="col-lg-3 col-sm-12">
+                                    <div class="mb-3">
+                                        <label class="my-1 me-2" for="major">주전공 학과 선택</label>
+                                        <select class="form-select" id="major" aria-label="major" onchange="majorSelect(this)">
+                                            <option {% if current_user.department.major == None %} selected {% elif current_user.department.major == "" %} selected {% endif %} disabled>--</option>
+                                            <option disabled>──────자연과학대학──────</option>
+                                            <option {% if current_user.department.major == "MAS" %} selected {% endif %} value="MAS">수리과학과</option>
+                                            <option {% if current_user.department.major == "PH" %} selected {% endif %} value="PH">물리학과</option>
+                                            <option {% if current_user.department.major == "CH" %} selected {% endif %} value="CH">화학과</option>
+                                            <option disabled>──────생명과학대학──────</option>
+                                            <option {% if current_user.department.major == "BS" %} selected {% endif %} value="BS">생명과학과</option>
+                                            <option disabled>───────공과대학───────</option>
+                                            <option {% if current_user.department.major == "ME" %} selected {% endif %} value="ME">기계공학과</option>
+                                            <option {% if current_user.department.major == "AE" %} selected {% endif %} value="AE">항공우주공학과</option>
+                                            <option {% if current_user.department.major == "EE" %} selected {% endif %} value="EE">전기및전자공학부</option>
+                                            <option {% if current_user.department.major == "CE" %} selected {% endif %} value="CE">건설및환경공학과</option>
+                                            <option {% if current_user.department.major == "CS" %} selected {% endif %} value="CS">전산학부</option>
+                                            <option {% if current_user.department.major == "BiS" %} selected {% endif %} value="BiS">바이오및뇌공학과</option>
+                                            <option {% if current_user.department.major == "CBE" %} selected {% endif %} value="CBE">생명화학공학과</option>
+                                            <option {% if current_user.department.major == "ID" %} selected {% endif %} value="ID">산업디자인학과</option>
+                                            <option {% if current_user.department.major == "IE" %} selected {% endif %} value="IE">산업및시스템공학과</option>
+                                            <option {% if current_user.department.major == "MS" %} selected {% endif %} value="MS">신소재공학과</option>
+                                            <option {% if current_user.department.major == "NQE" %} selected {% endif %} value="NQE">원자력및양자공학과</option>
+                                            <option disabled>───────경영대학───────</option>
+                                            <option {% if current_user.department.major == "MSB" %} selected {% endif %} value="MSB">기술경영학부</option>
+                                            <option disabled>──────융합인재학부──────</option>
+                                            <option {% if current_user.department.major == "TS" %} selected {% endif %} value="TS">융합인재학부</option>
+                                        </select>
+                                    </div>
+                                    <!--심화 전공 및 자유융합 전공 선택-->
+                                    <div class="input-group justify-content-left">
+                                        <div class="form-check form-switch">
+                                        <input class="form-check-input space-left" type="checkbox" id="advancedSwitch" onclick="statSelect()"
+                                               {% if current_user.department.is_advanced_major %} checked {% endif %}>
+                                        <label class="form-check-label" for="advancedSwitch">심화전공 선택</label>
+                                        </div>
+                                    </div>
+                                    <div class="input-group justify-content-left">
+                                        <div class="form-check form-switch">
+                                        <input class="form-check-input space-left" type="checkbox" id="individualSwitch" onclick="statSelect()"
+                                               {% if current_user.department.is_individually_designed %} checked {% endif %}>
+                                        <label class="form-check-label" for="individualSwitch">자유융합전공 선택</label>
+                                        </div>
+                                    </div>
+                                    </div>
+
+
+                                    <!--복수전공 선택-->
+                                    <div class="col-lg-3 col-sm-12">
+                                    <div class="mb-3" id="doubleForm">
+                                        <label class="my-1 me-2" for="double">복수전공 학과 선택</label>
+                                        <select class="form-select" multiple="multiple" id="double" aria-label="double" onchange="double_or_minor()">
+                                            <option {% if current_user.department.double_major == "" %} selected {% endif %} value="@">(선택 없음)</option>
+                                            <option disabled>──────자연과학대학──────</option>
+                                            <option {% if current_user.department.major == "MAS" %} disabled {% endif %} value="MAS">수리과학과</option>
+                                            <option {% if current_user.department.major == "PH" %} disabled {% endif %} value="PH">물리학과</option>
+                                            <option {% if current_user.department.major == "CH" %} disabled {% endif %} value="CH">화학과</option>
+                                            <option disabled>──────생명과학대학──────</option>
+                                            <option {% if current_user.department.major == "BS" %} disabled {% endif %} value="BS">생명과학과</option>
+                                            <option disabled>───────공과대학───────</option>
+                                            <option {% if current_user.department.major == "ME" %} disabled {% endif %} value="ME">기계공학과</option>
+                                            <option {% if current_user.department.major == "AE" %} disabled {% endif %} value="AE">항공우주공학과</option>
+                                            <option {% if current_user.department.major == "EE" %} disabled {% endif %} value="EE">전기및전자공학부</option>
+                                            <option {% if current_user.department.major == "CE" %} disabled {% endif %} value="CE">건설및환경공학과</option>
+                                            <option {% if current_user.department.major == "CS" %} disabled {% endif %} value="CS">전산학부</option>
+                                            <option {% if current_user.department.major == "BiS" %} disabled {% endif %} value="BiS">바이오및뇌공학과</option>
+                                            <option {% if current_user.department.major == "CBE" %} disabled {% endif %} value="CBE">생명화학공학과</option>
+                                            <option {% if current_user.department.major == "ID" %} disabled {% endif %} value="ID">산업디자인학과</option>
+                                            <option {% if current_user.department.major == "IE" %} disabled {% endif %} value="IE">산업및시스템공학과</option>
+                                            <option {% if current_user.department.major == "MS" %} disabled {% endif %} value="MS">신소재공학과</option>
+                                            <option {% if current_user.department.major == "NQE" %} disabled {% endif %} value="NQE">원자력및양자공학과</option>
+                                            <option disabled>───────경영대학───────</option>
+                                            <option {% if current_user.department.major == "MSB" %} disabled {% endif %} value="MSB">기술경영학부</option>
+                                            <option disabled>──────융합인재학부──────</option>
+                                            <option {% if current_user.department.major == "TS" %} disabled {% endif %} value="TS">융합인재학부</option>
+                                        </select>
+                                        <p class="text-muted font-small">*중복 선택: ctrl키 + 다중선택</p>
+                                    </div>
+                                    </div>
+
+
+                                    <!--부전공 선택-->
+                                    <div class="col-lg-3 col-sm-12">
+                                    <div class="mb-3" id="minorForm">
+                                        <label class="my-1 me-2" for="minor">부전공 학과 선택</label>
+                                        <select class="form-select" multiple="multiple" id="minor" aria-label="minor" onchange="double_or_minor()">
+                                            <option {% if current_user.department.minor == "" %} selected {% endif %} value="@">(선택 없음)</option>
+                                            <option disabled>──────자연과학대학──────</option>
+                                            <option {% if current_user.department.major == "MAS" %} disabled {% endif %} value="MAS">수리과학과</option>
+                                            <option {% if current_user.department.major == "PH" %} disabled {% endif %} value="PH">물리학과</option>
+                                            <option {% if current_user.department.major == "CH" %} disabled {% endif %} value="CH">화학과</option>
+                                            <option disabled>──────생명과학대학──────</option>
+                                            <option {% if current_user.department.major == "BS" %} disabled {% endif %} value="BS">생명과학과</option>
+                                            <option disabled>───────공과대학───────</option>
+                                            <option {% if current_user.department.major == "ME" %} disabled {% endif %} value="ME">기계공학과</option>
+                                            <option {% if current_user.department.major == "AE" %} disabled {% endif %} value="AE">항공우주공학과</option>
+                                            <option {% if current_user.department.major == "EE" %} disabled {% endif %} value="EE">전기및전자공학부</option>
+                                            <option {% if current_user.department.major == "CE" %} disabled {% endif %} value="CE">건설및환경공학과</option>
+                                            <option {% if current_user.department.major == "CS" %} disabled {% endif %} value="CS">전산학부</option>
+                                            <option {% if current_user.department.major == "BiS" %} disabled {% endif %} value="BiS">바이오및뇌공학과</option>
+                                            <option {% if current_user.department.major == "CBE" %} disabled {% endif %} value="CBE">생명화학공학과</option>
+                                            <option {% if current_user.department.major == "ID" %} disabled {% endif %} value="ID">산업디자인학과</option>
+                                            <option {% if current_user.department.major == "IE" %} disabled {% endif %} value="IE">산업및시스템공학과</option>
+                                            <option {% if current_user.department.major == "MS" %} disabled {% endif %} value="MS">신소재공학과</option>
+                                            <option {% if current_user.department.major == "NQE" %} disabled {% endif %} value="NQE">원자력및양자공학과</option>
+                                            <option disabled>───────경영대학───────</option>
+                                            <option {% if current_user.department.major == "MSB" %} disabled {% endif %} value="MSB">기술경영학부</option>
+                                            <option disabled>──────융합인재학부──────</option>
+                                            <option {% if current_user.department.major == "TS" %} disabled {% endif %} value="TS">융합인재학부</option>
+                                        </select>
+                                        <p class="text-muted font-small">*중복 선택: ctrl키 + 다중선택</p>
+                                    </div>
+                                    </div>
+
+                                        <div class="col-lg-3 col-sm-12 align-item-center" id="deptInfo">
+                                        {% if current_user.department == None %}
+                                        <p class="lead">학과 정보가 없습니다.</p>
+                                        {% else %}
+                                        <br>
+                                        <p> 주전공 <strong>{{ current_user.department.major_name_kr()[0] }}</strong>
+                                        {% if current_user.department.is_advanced_major %}
+                                        <strong> (심화) </strong>
+                                        {% endif %}
+                                        </p>
+                                        {% if current_user.department.is_individually_designed %}
+                                        <p><strong> 자유융합 전공 과정 </strong></p>
+                                        {% endif %}
+                                        {% if current_user.department.double_major != "" %}
+                                        {% for name in current_user.department.major_name_kr()[1] %}
+                                        <p> 복수전공 학과 <strong>{{ name }}</strong> </p>
+                                        {% endfor %}
+                                        {% endif %}
+                                        {% if current_user.department.minor != "" %}
+                                        {% for name in current_user.department.major_name_kr()[2] %}
+                                        <p> 부전공 학과 <strong>{{ name }}</strong> </p>
+                                        {% endfor %}
+                                        {% endif %}
+                                        {% endif %}
+                                            <br>
+                                        <button class="btn btn-primary btn-sm" type="button" onclick="resetDept()">
+                                            <span aria-hidden="true" class="fas fa-redo-alt"></span> 학과 선택 초기화하기
+                                        </button>
+                                        </div>
+
+
+                                    </div>
+                                </div>
+                                <!-- End Content -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row justify-content-center">
+                        <div class="col-12 col-lg-12 text-center" id="calculate">
+                            <br>
+                        {% if current_user.department == None %}
+                        {% else %}
+                        <button class="btn btn-info" type="button" onclick="scroll(); animation();" {% if current_user.valid_department() %}{% else %} disabled {% endif %} id="calcbtn">
+                            <span aria-hidden="true" class="fas fa-calculator"></span> 졸업 요건 계산하기
+                        </button>
+                        {% endif %}
+                            {% if current_user.valid_department() %}
+                            {% else %}
+                            <p> <strong style="color:red;"><br>학과 정보를 입력해주세요.<br> 심화전공, 복수전공, 부전공, 자유융합전공 중 하나 이상 이수하여야 합니다.</strong> </p>
+                            {% endif %}
+                            {% if current_user.department.major == "MSB" %}
+                            {% if current_user.department.double_major == "" %}
+                            <p> <strong style="color:red;">학사과정 기술경영학부 재학생은 타 학과 복수전공 이수가 필수입니다.</strong> </p>
+                            {% endif %}
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <!--분석 정보 보기-->
+                    <div class="row mt-4">
+                        <div class="container-fluid hidden delay-more" id="analysisContent">
+                            <div class="row justify-content-center">
+                                <div class="col-12 col-md-10 col-lg-10">
+                                    <!-- Tab Nav -->
+                                    <div class="nav-wrapper position-relative mb-2">
+                                        <ul class="nav nav-pills nav-fill flex-column flex-md-row" id="tabs-text" role="tablist">
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0 active" id="tabs-text-1-tab" data-bs-toggle="tab"
+                                                    href="#tabs-text-1" role="tab" aria-controls="tabs-text-1" aria-selected="true">졸업 사정 요약</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-text-2-tab" data-bs-toggle="tab"
+                                                    href="#tabs-text-2" role="tab" aria-controls="tabs-text-2"
+                                                    aria-selected="false">세부 과목 선택표</a>
+                                            </li>
+                                            <li class="nav-item">
+                                                <a class="nav-link mb-sm-3 mb-md-0" id="tabs-text-3-tab" data-bs-toggle="tab"
+                                                    href="#tabs-text-3" role="tab" aria-controls="tabs-text-3"
+                                                    aria-selected="false">남은 과목 살펴보기</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                    <!-- End of Tab Nav -->
+                                    <!-- Tab Content -->
+                                    <div class="card border-0">
+                                        <div class="card-body p-0">
+                                            <div class="tab-content" id="tabcontent1">
+                                                <div class="tab-pane fade show active" id="tabs-text-1" role="tabpanel"
+                                                    aria-labelledby="tabs-text-1-tab">
+                                                    {% if current_user.valid_department() %}
+                                                    <p class="text-muted" align="left">*본 프로그램은 2014년도 이후 학사 요람을 주로 참고하여 제작되었습니다.
+                                                        또한, 교과목 목록 및 학과 이수 요건은 2015년도 이후 자료를 참고하여 제작하였습니다.
+                                                        따라서 일부 계산이 부정확할 수 있습니다. 정확한 졸업 요건 확인이 필요한 분들께서는 꼭 학사시스템에 있는
+                                                    졸업 관리 프로그램을 이용해 주세요.</p>
+                                                    <br>
+                                                    <div class="progress-wrapper">
+                                                        <div class="progress-info">
+                                                            <div class="progress-label">
+                                                                <span class="text-success">졸업 진척도</span>
+                                                            </div>
+                                                            <div class="progress-percentage">
+                                                                <span>{{ current_user.graduate_percent() }}%</span>
+                                                            </div>
+                                                        </div>
+                                                        <div class="progress progress-xl">
+                                                            <div class="progress-bar bg-success progress-animation" role="progressbar" style="width: {{ current_user.graduate_percent() }}%;" aria-valuenow="{{ current_user.graduate_percent() }}"
+                                                                aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                    </div>
+                                                    {% set required = current_user.required_credits() %}
+                                                    {% set completed = current_user.completed_credits() %}
+                                                    {% set remaining = current_user.remaining_credits() %}
+                                                    {% set alerts = current_user.remaining_credit_alert() %}
+                                                    {% set total = current_user.render_remaining_total_credits() %}
+                                                    <p>*이수를 위해 들어야 하는 과목은 '남은 과목 살펴보기' 탭에서 확인할 수 있습니다.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover summary">
+                                                        <thead>
+                                                        <tr>
+                                                            <th>분류</th>
+                                                            <th>졸업 요건</th>
+                                                            <th>이수 현황</th>
+                                                            <th>잔여 학점</th>
+                                                            <th>이수 여부</th>
+                                                            <th>비고</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                        <tr>
+                                                            <td>교양필수</td>
+                                                            <td> {{ required[0] }} </td>
+                                                            <td> {{ completed[0] }} </td>
+                                                            <td> {{ remaining[4] }} </td>
+                                                            <td> {% if remaining[4] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>교양필수(AU)</td>
+                                                            <td> 8(AU) </td>
+                                                            <td> {{ completed[1] }}(AU) </td>
+                                                            <td> {{ remaining[0] + remaining[1] + remaining[2] + remaining[3] }}(AU) </td>
+                                                            <td> {% if remaining[0] + remaining[1] + remaining[2] + remaining[3] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> {% if remaining[0] != 0 %} 즐대생 {% endif %}
+                                                                {% if remaining[1] != 0 %} 신대생 {% endif %}
+                                                                {% if remaining[2] != 0 %} 인성/리더십 {% endif %}
+                                                                {% if remaining[3] != 0 %} 체육 {% endif %}
+                                                                {% if remaining[0] + remaining[1] + remaining[2] + remaining[3] == 0 %} - {% else %} 부족 {% endif %} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>기초필수</td>
+                                                            <td> {{ required[1] }} </td>
+                                                            <td> {{ completed[2] }} </td>
+                                                            <td> {{ remaining[5] }} </td>
+                                                            <td> {% if remaining[5] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>기초선택</td>
+                                                            <td> {{ required[2] }} </td>
+                                                            <td> {{ completed[3] }} </td>
+                                                            <td> {{ remaining[6] }} </td>
+                                                            <td> {% if remaining[6] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>주전공</td>
+                                                            <td> {{ required[4] }} </td>
+                                                            <td> {{ completed[4] }} </td>
+                                                            <td> {{ remaining[8][1] }} </td>
+                                                            <td> {% if ((alerts["전공필수"] == None) and (alerts["전공 교과목"] == None)) %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> {% if alerts["전공필수"] != None %}전공필수 {{ alerts["전공필수"] }}학점 부족, {% endif %}{% if alerts["전공 교과목"] != None %}전체 {{ alerts["전공 교과목"] }}학점 부족{% endif %}</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>복/부전공</td>
+                                                            <td> {{ required[5] }} </td>
+                                                            <td> {{ completed[5] }} </td>
+                                                            <td> {{ remaining[9][1] }} </td>
+                                                            <td> {% if ((alerts["타학과 전공필수"] == None) and (alerts["타학과 전공 교과목"] == None)) %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> {% if alerts["타학과 전공필수"] != None %}타학과 전공필수 {{ alerts["타학과 전공필수"] }}학점 부족, {% endif %}{% if alerts["타학과 전공 교과목"] != None %}전체 {{ alerts["타학과 전공 교과목"] }}학점 부족{% endif %} </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>인문선택</td>
+                                                            <td> {{ required[6] }} </td>
+                                                            <td> {{ completed[6] }} </td>
+                                                            <td> {{ remaining[10] }} </td>
+                                                            <td> {% if remaining[10] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>자유선택</td>
+                                                            <td> - </td>
+                                                            <td> {{ completed[7] }} </td>
+                                                            <td> - </td>
+                                                            <td> - </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>연구학점</td>
+                                                            <td> {{ required[3] }} </td>
+                                                            <td> {{ completed[8] }} </td>
+                                                            <td> {{ remaining[7] }} </td>
+                                                            <td> {% if remaining[7] == 0 %} 이수 {% else %} <strong style="color: red;">미이수</strong> {% endif %} </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>계</td>
+                                                            <td> {{ required[7] }} </td>
+                                                            <td> {{ completed[-1] }} </td>
+                                                            <td> {{ total }} </td>
+                                                            <td> {% if total == 0 %}
+                                                                 {% if current_user.check_credit_requirements() %}
+                                                                 {% if current_user.check_course_requirements() %}
+                                                                 <strong>이수</strong>
+                                                                 {% else %}<strong style="color: red;">미이수</strong>
+                                                                 {% endif %}
+                                                                 {% else %} <strong style="color: red;">미이수</strong>
+                                                                 {% endif %}{% else %} <strong style="color: red;">미이수</strong> {% endif %}
+                                                            </td>
+                                                            <td> - </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                    </div>
+                                                    {% else %}
+
+                                                    {% if ((current_user.department.major == "MSB") and (current_user.department.double_major == "")) %}
+                                                    <p align="center" style="color:red;">기술경영학부는 복수전공 이수가 필수입니다.</p>
+                                                    {% else %}
+                                                    <p align="center">학과 정보를 입력해주세요. 심화전공, 복수전공, 부전공, 자유융합전공 중 하나 이상 이수하여야 합니다.</p>
+                                                    {% endif %}
+
+                                                    {% endif %}
+                                                </div>
+
+
+
+                                                <!-- 세부 선택 목록 -->
+                                                <div class="tab-pane fade" id="tabs-text-2" role="tabpanel"
+                                                    aria-labelledby="tabs-text-2-tab">
+                                                    {% if current_user.valid_department() %}
+
+                                                    <!-- 대체 교과목 선택 -->
+                                                    {% set replaceables = current_user.render_replaceables() %}
+                                                    {% if replaceables != [] %}
+                                                    <p>아래 교과목 중 대체 교과목으로 지정할 과목을 선택해 주세요.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover table-responsive courses">
+                                                        <tr>
+                                                            <th>과목 코드</th>
+                                                            <th>과목 이름</th>
+                                                            <th>대체 가능 과목 코드</th>
+                                                            <th>대체 가능 과목 이름</th>
+                                                            <th>대체/해제</th>
+                                                        </tr>
+                                                        {% for course in replaceables %}
+                                                        {% set course_id = course[0].id | string %}
+                                                        {% if "@"+course_id+"@" in current_user.replaced %}
+                                                        <tr>
+                                                            <td>{{ course[0].code }}</td>
+                                                            <td>{{ course[0].name }}</td>
+                                                            <td>{{ course[1].code }}</td>
+                                                            <td>{{ course[1].name }}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-sm" onclick="unreplace({{ course[0].id }})">
+                                                                    <span aria-hidden="true" class="fas fa-trash"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% else %}
+                                                        <tr>
+                                                            <td>{{ course[0].code }}</td>
+                                                            <td>{{ course[0].name }}</td>
+                                                            <td>{{ course[1].code }}</td>
+                                                            <td>{{ course[1].name }}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="replace({{ course[0].id }})">
+                                                                    <span aria-hidden="true" class="fas fa-check"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                    </div>
+                                                    <br>
+                                                    {% else %}
+                                                    <p>선택 가능한 대체교과목이 없습니다.</p>
+                                                    {% endif %}
+
+                                                    <!-- 자유융합전공 선택 -->
+                                                    {% if current_user.department.is_individually_designed == 1 %}
+                                                    {% set individuals = current_user.render_individual() %}
+                                                    {% if individuals != [] %}
+                                                    <p>아래 교과목 중 자유융합전공 이수요건으로 지정할 과목을 선택해 주세요.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover table-responsive courses">
+                                                        <tr>
+                                                            <th>개설 학과</th>
+                                                            <th>과목 코드</th>
+                                                            <th>과목 이름</th>
+                                                            <th>학점</th>
+                                                            <th>선택/해제</th>
+                                                        </tr>
+                                                        {% for course in individuals %}
+                                                        {% set course_id = course.id | string %}
+                                                        {% if "@"+course_id+"@" in current_user.individual %}
+                                                        <tr>
+                                                            <td>{{ course.department }}</td>
+                                                            <td>{{ course.code }}</td>
+                                                            <td>{{ course.name }}</td>
+                                                            <td>{{ course.credit }}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-sm" onclick="unindividual({{ course.id }})">
+                                                                    <span aria-hidden="true" class="fas fa-trash"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% else %}
+                                                        <tr>
+                                                            <td>{{ course.department }}</td>
+                                                            <td>{{ course.code }}</td>
+                                                            <td>{{ course.name }}</td>
+                                                            <td>{{ course.credit }}</td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="individual({{ course.id }})">
+                                                                    <span aria-hidden="true" class="fas fa-check"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                    </div>
+                                                    <br>
+                                                    {% endif %}
+
+                                                    {% endif %}
+
+                                                    <!-- 중복 인정 과목 선택 -->
+                                                    {% if current_user.valid_department() %}
+                                                    {% set doubles = current_user.render_doubly_recognizables() %}
+                                                    {% if doubles != [] %}
+                                                    <p>아래 교과목 중 복수전공 중복 인정 교과목으로 지정할 과목을 최대 6학점까지 선택해 주세요.</p>
+                                                    <p class="text-muted">*최대 인정 학점수는 학과별로 상이하므로, 학사요람을 참고하여 선택해주세요.<br>
+                                                        본 프로그램에서는 최대 인정 가능 학점수를 계산해주지 않습니다.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover table-responsive courses">
+                                                        <tr>
+                                                            <th>개설 학과</th>
+                                                            <th>과목 코드</th>
+                                                            <th>과목 이름</th>
+                                                            <th>중복 인정 가능 학과</th>
+                                                            <th>지정/해제</th>
+                                                        </tr>
+                                                        {% for course in doubles %}
+                                                        {% set course_id = course[0].id | string %}
+                                                        {% if "@"+course_id+"@" in current_user.doubly_recognized %}
+                                                        <tr>
+                                                            <td>{{ course[0].department }}</td>
+                                                            <td>{{ course[0].code }}</td>
+                                                            <td>{{ course[0].name }}</td>
+                                                            <td>
+                                                                {% for dept in course[1] %}
+                                                                {{ dept }} <br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-danger btn-sm" onclick="undouble({{ course[0].id }})">
+                                                                    <span aria-hidden="true" class="fas fa-trash"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% else %}
+                                                        <tr>
+                                                            <td>{{ course[0].department }}</td>
+                                                            <td>{{ course[0].code }}</td>
+                                                            <td>{{ course[0].name }}</td>
+                                                            <td>
+                                                                {% for dept in course[1] %}
+                                                                {{ dept }} <br>
+                                                                {% endfor %}
+                                                            </td>
+                                                            <td>
+                                                                <button type="button" class="btn btn-primary btn-sm" onclick="double({{ course[0].id }})">
+                                                                    <span aria-hidden="true" class="fas fa-check"></span>
+                                                                </button>
+                                                            </td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                    </div>
+                                                    <br>
+
+                                                    {% endif %}
+                                                    {% endif %}
+
+
+                                                    <!-- 인정 교과목 선택 -->
+                                                    {% if current_user.valid_department() %}
+                                                    {% set recognizables = current_user.render_recognizables() %}
+                                                    {% if recognizables != [] %}
+                                                    <p>아래 교과목 중 전공선택 인정 교과목으로 지정할 과목을 (중복 인정 선택 과목 포함) 최대 9학점까지 선택해 주세요.</p>
+                                                    <p class="text-muted">*최대 인정 학점수는 학과별로 상이하므로, 학사요람을 참고하여 선택해주세요.
+                                                        본 프로그램에서는 최대 인정 가능 학점수를 계산해주지 않습니다. 또한, 이미 중복 인정을 선택한 과목은 계산에 반영되지 않습니다.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover table-responsive courses">
+                                                        <tr>
+                                                            <th>개설 학과</th>
+                                                            <th>과목 코드</th>
+                                                            <th>과목 이름</th>
+                                                            <th>인정 학과 선택하기</th>
+                                                        </tr>
+                                                        {% for course in recognizables %}
+                                                        <tr>
+                                                            <td>{{ course[0].department }}</td>
+                                                            <td>{{ course[0].code }}</td>
+                                                            <td>{{ course[0].name }}</td>
+                                                            <td>
+                                                                <select class="form-select" aria-label="recognition" onchange="recognize(this, {{ course[0].id }})">
+                                                                    {% set course_id = course[0].id | string %}
+                                                                    <option value="None">(선택 안함)</option>
+                                                                    {% for dept in course[1] %}
+                                                                    <option {% if course_id not in recognized %}{% else %}
+                                                                            {% if recognized[course_id] == names[dept] %}
+                                                                            selected
+                                                                            {% endif %}
+                                                                            {% endif %} value="{{ dept }}">{{ dept }}</option>
+                                                                    {% endfor %}
+                                                                </select>
+                                                            </td>
+                                                        </tr>
+                                                        {% endfor %}
+                                                    </table>
+                                                    </div>
+                                                    <br>
+
+                                                    {% endif %}
+                                                    {% endif %}
+
+
+                                                    <!-- 선택 끝 -->
+                                                    {% else %}
+                                                    <p align="center">학과 정보를 입력하신 후 이용하실 수 있습니다.</p>
+                                                    {% endif %}
+                                                </div>
+
+
+
+
+
+
+
+                                                <!-- 남은 과목 살펴보기 -->
+                                                <div class="tab-pane fade" id="tabs-text-3" role="tabpanel"
+                                                    aria-labelledby="tabs-text-3-tab">
+                                                    {% if current_user.valid_department() %}
+
+                                                    {% if current_user.department.is_individually_designed == 1 %}
+                                                    {% set remaining_individual = 12 - current_user.completed_credits()[-2] %}
+                                                    {% if remaining_individual <= 0 %}
+                                                    {% else %}
+                                                    <p>자유융합전공 이수를 위한 남은 타학과 전공 학점은 총 {{ remaining_individual }}학점 입니다.</p>
+                                                    <br>
+                                                    {% endif %}
+                                                    {% endif %}
+
+                                                    {% set course_alert = current_user.remaining_course_alert() %}
+
+                                                    {% if course_alert == "Success" %}
+                                                    <p align="center">모든 필요 교과목을 이수하셨습니다!</p>
+                                                    {% else %}
+
+
+                                                    {% for alert in course_alert %}
+                                                    <p>아래 {{ alert[0] }}과목 중 {{ alert[1] }}과목을 이수하셔야 합니다.</p>
+                                                    <div class="table-responsive">
+                                                    <table class="table table-hover table-responsive courses">
+                                                        <tr>
+                                                            <th>개설 학과</th>
+                                                            <th>구분</th>
+                                                            <th>과목 코드</th>
+                                                            <th>과목 이름</th>
+                                                            <th>학점</th>
+                                                        </tr>
+                                                        {% for course in alert[2] %}
+                                                        {% if course in current_user.courses %}
+                                                        {% else %}
+                                                        <tr>
+                                                            <td>{{ course.department }}</td>
+                                                            <td>{{ course.subject_type }}</td>
+                                                            <td>{{ course.code }}</td>
+                                                            <td>{{ course.name }}</td>
+                                                            <td>{{ course.credit }}</td>
+                                                        </tr>
+                                                        {% endif %}
+                                                        {% endfor %}
+                                                    </table>
+                                                    </div>
+                                                    <br>
+                                                    {% endfor %}
+                                                    {% endif %}
+
+                                                    {% else %}
+                                                    <p align="center">학과 정보를 입력하신 후 이용하실 수 있습니다.</p>
+                                                    {% endif %}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- End of Tab Content -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 분석 정보 보기 끝 -->
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+<script>
+    $(document).ready(function(){
+        });
+    function animation() {
+        x = document.getElementById("calcbtn");
+        x.style.display = "none";
+        $('html, body').animate({
+            scrollTop: $("#analysisContent").offset().top
+        }, 200);
+        $("#analysisContent").load(location.href+" #analysisContent>*","");
+        document.getElementById('analysisContent').className = 'classname';
+    };
+    function resetDept(){
+        $.ajax({
+            url:'/reset_department',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                flag: 1
+            })
+
+        }).done(function(res){
+            window.location.reload();
+        });
+    };
+    function add_year(year){
+        $.ajax({
+            url:'/add_department',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                year: year.value
+            })
+
+        }).done(function(res){
+            $("#creditTable").load(location.href+" #creditTable>*","");
+        });
+    };
+    function statSelect(){
+        var adv_checked = document.getElementById("advancedSwitch").checked;
+        var indiv_checked = document.getElementById("individualSwitch").checked;
+        $.ajax({
+            url:'/add_department',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                advanced: adv_checked,
+                individual: indiv_checked
+            })
+
+        }).done(function(res){
+            $("#deptInfo").load(location.href+" #deptInfo>*","");
+            $("#calculate").load(location.href+" #calculate>*","");
+        });
+    };
+    function majorSelect(major){
+        $.ajax({
+            url:'/add_department',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                major: major.value
+            })
+
+        }).done(function(res){
+            $("#deptInfo").load(location.href+" #deptInfo>*","");
+            $("#doubleForm").load(location.href+" #doubleForm>*","");
+            $("#minorForm").load(location.href+" #minorForm>*","");
+            $("#calculate").load(location.href+" #calculate>*","");
+            $("#advancedSwitch").load(location.href+" #advancedSwitch>*","");
+        });
+    };
+    function double_or_minor(){
+        var doubles = $('#double').val();
+        var minors = $('#minor').val();
+        $.ajax({
+            url:'/add_department',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                double: doubles,
+                minor: minors
+            })
+
+        }).done(function(res){
+            $("#deptInfo").load(location.href+" #deptInfo>*","");
+            $("#calculate").load(location.href+" #calculate>*","");
+            $("#advancedSwitch").load(location.href+" #advancedSwitch>*","");
+        });
+    };
+
+</script>
+
+<script>
+    function replace(id){
+        $.ajax({
+            url:'/replace_or_unreplace',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+    function unreplace(id){
+        $.ajax({
+            url:'/replace_or_unreplace',
+            contentType : 'application/json',
+            method:'DELETE',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+
+    function individual(id){
+        $.ajax({
+            url:'/individual_or_not',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+    function unindividual(id){
+        $.ajax({
+            url:'/individual_or_not',
+            contentType : 'application/json',
+            method:'DELETE',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+    function double(id){
+        $.ajax({
+            url:'/double_or_undouble',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+    function undouble(id){
+        $.ajax({
+            url:'/double_or_undouble',
+            contentType : 'application/json',
+            method:'DELETE',
+            data : JSON.stringify({
+                id: id
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    }
+    function recognize(dept, course){
+        $.ajax({
+            url:'/recognize',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                dept: dept.value,
+                course: course
+            })
+
+        }).done(function(res){
+            $("#tabs-text-1").load(location.href+" #tabs-text-1>*","");
+            $("#tabs-text-2").load(location.href+" #tabs-text-2>*","");
+        });
+    };
+</script>
+
+    {% include 'includes/footer.html' %}
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}

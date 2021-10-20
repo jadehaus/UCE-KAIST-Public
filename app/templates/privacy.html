@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} 매화수 개인정보 보호방침 {% endblock %}
+
+
+{% block content %}
+
+<!-- Specific Page CSS goes HERE  -->
+
+    <main>
+
+        <!-- Hero -->
+        <section class="section-header pb-9 pb-lg-12 mb-4 mb-lg-6">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-md-8 text-center">
+                        <h1 class="display-2 mb-3">개인정보 보호방침</h1>
+                        <p class="lead mb-5">2021년 9월 17일</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="section section-lg pt-0">
+        <div class="container mt-n7 mt-lg-n12 z-2">
+            <div class="row justify-content-center">
+                <div class="col">
+                    <div class="card border-gray-300 p-4 p-md-5">
+
+                        <h2 class="mb-3">개인정보 보호방침</h2>
+                        <p>
+                            매화수는 서비스 이용을 위해 필요한 최소한의 정보만 수집하고 있습니다. 또한, 매화수에서 수집하는 모든 정보는 완전한 익명으로 처리됩니다.
+                            <br>매화수가 수집하는 정보는 아래와 같습니다.
+                            <ul>
+                            <li>이메일 주소</li>
+                            <li>수강 과목 목록 및 과목별 수강 정보(수강학기). 단, 학점은 포함하지 않음.</li>
+                            <li>학과 및 전공 선택 정보</li>
+                            </ul>
+                            매화수의 개인정보 수집 목적은 아래와 같습니다.
+                            <br><br>
+                            <ul>
+                            <li>졸업 요건 및 과목 추천 서비스 제공을 위한 수집</li>
+                            <li>이메일의 경우: 개인정보 이용 고지의 의무를 이행하기 위해 수집(매화수는 개인 식별을 위해 이메일 주소를 사용하지 않습니다.)</li>
+                            </ul>
+                            매화수는 별도 동의가 있는 경우나 법령에 규정된 경우를 제외하고는 이용자의 개인정보를 제3자에게 제공하지 않습니다. 또한, 개인정보는 수집 및 이용목적이 달성되면 지체없이 파기합니다. 계정 탈퇴 시 서버에서 모든 개인정보는 자동으로 삭제됩니다.
+
+                        </p>
+                        <h2 class="mt-5 mb-3">개인정보 보호방침 수정 시</h2>
+                        <p>개인정보 보호방침이 수정될 경우, 가입할 때 사용하신 이메일로 변경 내용을 안내드립니다.</p>
+                        <img src="static/assets/img/etc/security.svg" alt="">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        </section>
+
+    </main>
+
+
+{% include 'includes/footer.html' %}
+{% endblock content %}

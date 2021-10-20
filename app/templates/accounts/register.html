@@ -1,0 +1,109 @@
+{% extends "layouts/base-fullscreen.html" %}
+
+{% block title %} Sign UP {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+
+    <main>
+
+        <!-- Section -->
+        <section class="min-vh-100 d-flex align-items-center section-image overlay-soft-dark">
+            <div class="container">
+                <div class="row justify-content-center">
+                    <div class="col-12 d-flex align-items-center justify-content-center">
+                        <div class="signin-inner my-4 my-lg-0 bg-white shadow-soft border rounded border-gray-300 p-4 p-lg-5 w-100 fmxw-500">
+                            <div class="text-center text-md-center mb-4 mt-md-0">
+                                <h1 class="mb-0 h3">
+                                    <a href="#" target="_blank">매화수</a> - 회원가입
+                                </h1>
+                                <br />
+                                <span class="font-weight-normal">
+                                    {% if msg %}
+                                        {{ msg | safe }}
+                                    {% else %}
+                                    {% endif %}                                  
+                                </span>
+                            </div>
+                            <form method="post" action="" action="#">
+
+                                {{ form.hidden_tag() }}
+
+                                <div class="form-group mb-4">
+                                    <label for="user_id">닉네임</label>
+                                    <div class="input-group" id="user_id">
+                                        <span class="input-group-text" id="basic-addon1"><span class="fas fa-user"></span></span>
+                                        {{ form.username(class="form-control") }}
+                                    </div>
+                                </div>
+                                <!-- Form -->
+                                <div class="form-group mb-4">
+                                    <label for="email">이메일</label>
+                                    <div class="input-group" id="email">
+                                        <span class="input-group-text" id="basic-addon3"><span class="fas fa-envelope"></span></span>
+                                        {{ form.email(class="form-control", type="email") }}
+                                    </div>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label for="year">입학 연도</label>
+                                    <div class="input-group" id="year">
+                                        <span class="input-group-text" id="basic-addon6"><span class="fas fa-calendar-alt"></span></span>
+                                        {{ form.year(class="form-control") }}
+                                    </div>
+                                    <p class="text-muted font-small">&nbsp;&nbsp;입학연도는 졸업 요건 계산을 위해 꼭 필요합니다.</p>
+                                </div>
+                                <!-- End of Form -->
+                                <div class="form-group">
+                                    <!-- Form -->
+                                    <div class="form-group mb-4">
+                                        <label for="password">비밀번호</label>
+                                        <div class="input-group" id="password">
+                                            <span class="input-group-text" id="basic-addon4"><span class="fas fa-unlock-alt"></span></span>
+                                            {{ form.password(class="form-control", type="password") }}
+                                        </div>  
+                                    </div>
+                                    <div class="form-group mb-4">
+                                        <label for="password2">비밀번호 재입력</label>
+                                        <div class="input-group" id="password2">
+                                            <span class="input-group-text" id="basic-addon5"><span class="fas fa-unlock-alt"></span></span>
+                                            {{ form.password2(class="form-control", type="password") }}
+                                        </div>
+                                    </div>
+                                    <!-- End of Form -->
+                                    <div class="d-flex justify-content-between align-items-center mb-4">
+                                        <div class="form-check mb-0">
+                                            <input class="form-check-input" type="checkbox" id="agree" name="agree">
+                                            <label class="form-check-label mb-0" for="agree">
+                                              <a class="fw-bold text-underline" href="/privacy">개인정보 보호방침</a>
+                                            </label>
+                                        </div>
+                                        <div><a href="{{ url_for('login') }}" class="text-right">로그인</a></div>
+                                    </div>
+                                </div>
+                                <div class="d-grid">
+                                    <button type="submit" name="register" class="btn btn-primary">회원가입 완료</button>
+                                </div>
+                            </form>
+                            
+                            <br />
+
+                            <div class="d-flex justify-content-center align-items-center mt-4">
+                                <span class="fw-normal">
+                                    &copy; 만든이: 김민우
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+{% endblock content %}
+
+<!-- Specific Page JS goes HERE  -->
+{% block javascripts %}{% endblock javascripts %}
