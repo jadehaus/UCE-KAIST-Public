@@ -1,6 +1,6 @@
 # UCE-KAIST-Public
 Undergraduate Course Explorer for KAIST   
-Website link: [graduate-kaist.herokuapp.com][graduate-kaist.herokuapp.com]
+Website link: [graduate-kaist.herokuapp.com](graduate-kaist.herokuapp.com)
 
 ______________________  
 
