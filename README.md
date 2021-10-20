@@ -1,5 +1,5 @@
 # UCE-KAIST-Public
-Undergraduate Course Explorer for KAIST
+Undergraduate Course Explorer for KAIST   
 Website link: graduate-kaist.herokuapp.com
 
 ## 하나뿐인 KAIST 학부 졸업 길라잡이, 매화수
