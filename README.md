@@ -3,7 +3,7 @@ Undergraduate Course Explorer for KAIST
 Website link: graduate-kaist.herokuapp.com
 
 ## 하나뿐인 KAIST 학부 졸업 길라잡이, 매화수
-매화수는 학부 졸업 사정을 관리하고, 수강 계획을 설계하는데 도움을 주는 프로그램입니다.
+매화수는 학부 졸업 사정을 관리하고, 수강 계획을 설계하는데 도움을 주는 프로그램입니다.   
 앞으로 카이스트 학생이라면 누구나 참여할 수 있는 오픈소스 프로젝트로 확대할 계획입니다.
 
 ### 매화수의 시작은 엑셀
