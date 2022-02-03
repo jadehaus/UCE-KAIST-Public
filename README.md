@@ -1,6 +1,6 @@
 # UCE-KAIST-Public
 Undergraduate Course Explorer for KAIST   
-Website link: [graduate-kaist.herokuapp.com](graduate-kaist.herokuapp.com)
+Website link: [https://graduate-kaist.herokuapp.com/](https://graduate-kaist.herokuapp.com/)
 
 ______________________  
 
@@ -11,7 +11,7 @@ ______________________
 ______________________   
 
 ### 매화수의 시작은 엑셀
-매화수는 본래 졸업 요건 확인을 돕는 엑셀 파일이었습니다. 엑셀은 사용자가 쉽게 함수를 수정하고 정보를 변경할 수 있다는 장점이 있지만, 업데이트 및 추가 기능 등을 제공하기 어렵다는 단점이 있었습니다. 초기에 배포했던 엑셀 파일은 여기에서 확인할 수 있습니다.
+매화수는 본래 졸업 요건 확인을 돕는 엑셀 파일이었습니다. 엑셀은 사용자가 쉽게 함수를 수정하고 정보를 변경할 수 있다는 장점이 있지만, 업데이트 및 추가 기능 등을 제공하기 어렵다는 단점이 있었습니다. 초기에 배포했던 엑셀 파일은 [여기](https://drive.google.com/drive/folders/1of8QvBe0rTh6NvzFkeoue7LiTwsWuY62?fbclid=IwAR3Qy3cAsjO5yHcFPQgvussTSLzZsNahBWmUR35yAOsIFKWWBG8_wp4iPIs)에서 확인할 수 있습니다.
 
 ### 새롭게 만들어진 웹버전, 매화수
 새롭게 웹사이트로 만들어진 매화수는 언제 어디서든 쉽고 간편하게 졸업 요건을 확인할 수 있도록 제작되었습니다. 나아가, 사용자의 익명 데이터들을 기반으로 AI 등을 활용해 스마트한 과목 추천 시스템을 구현할 예정입니다.
