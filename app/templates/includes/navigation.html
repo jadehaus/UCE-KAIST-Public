@@ -27,7 +27,7 @@
                         <li class="nav-item"><a href="{{ url_for('course_add') }}" class="nav-link"> 과목 추가하기 </a></li>
                         <li class="nav-item"><a href="{{ url_for('course_view') }}" class="nav-link"> 수강 과목 목록 </a></li>
                         <li class="nav-item"><a href="{{ url_for('course_analysis') }}" class="nav-link"> 졸업 요건 분석 </a></li>
-<!--                        <li class="nav-item"><a href="#" class="nav-link"> 과목 추천 시스템 <span class="badge bg-secondary" >AI</span>(TBA) </a></li>-->
+                        <li class="nav-item"><a href="{{ url_for('techtree') }}" class="nav-link"> 과목 추천 시스템 <span class="badge bg-secondary" >NEW</span> </a></li>
                     </ul>
                     {% endif %}
                 </div>
@@ -39,10 +39,6 @@
                     <a href="{{ url_for('reset_password') }}" style="color: white"> {{ current_user.username }} 님 &nbsp;&nbsp;&nbsp;</a>
                     <a href="{{ url_for('logout') }}"
                        class="btn btn-outline-gray-100 d-none d-lg-inline me-md-3"><span class="fas fa-sign-out-alt me-2"></span> 로그아웃</a>
-                    {% endif %}
-                    {% if current_user.is_authenticated %}
-                    <a href="https://forms.gle/mZ6UoD47ZVY6DzEM8"
-                       class="btn btn-outline-gray-100 d-none d-lg-inline me-md-3"><span class="fas fa-bug me-2"></span> 버그 제보 및 피드백</a>
                     {% endif %}
                     <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbar_global" aria-controls="navbar_global" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>

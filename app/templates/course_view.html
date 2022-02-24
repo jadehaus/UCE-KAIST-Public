@@ -7,6 +7,16 @@
 
 <!-- Specific Page CSS goes HERE  -->
 <style>
+
+@media all {
+	.dropdown-menu li{ position: relative; 	}
+	.nav-item .submenu{
+		display: none;
+		position: absolute;
+	}
+	.dropdown-menu > li:hover > .submenu{ display: block; }
+}
+
 .space-below {
   margin-below: 20px;
 }
@@ -96,7 +106,7 @@ table { min-width: 800px; }
 </style>
 
     <main>
-        
+
         {% include 'includes/preloader.html' %}
 
         <!-- Hero -->
@@ -181,10 +191,15 @@ table { min-width: 800px; }
                                                   <ul class="dropdown-menu" aria-labelledby="btndropdown">
                                                       <li><a class="dropdown-item" selected>--</a></li>
                                                       <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
-                                                      {% for year in range(current_user.admitted_year, year + 1) %}
-                                                      {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
-                                                      <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ year }}년도 {{ semester }}</a></li>
-                                                      {% endfor %}
+                                                      {% for year in range(current_user.admitted_year, current_user.admitted_year + 10) %}
+                                                      <li class="dropstart">
+                                                          <a class="dropdown-item">{{ year }}년도</a>
+                                                          <ul class="submenu dropdown-menu">
+                                                              {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                              <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
+                                                              {% endfor %}
+                                                          </ul>
+                                                      </li>
                                                       {% endfor %}
                                                       <li class="divider"></li>
                                                       <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
@@ -243,10 +258,15 @@ table { min-width: 800px; }
                                               <ul class="dropdown-menu" aria-labelledby="btndropdown">
                                                   <li><a class="dropdown-item" selected>--</a></li>
                                                   <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
-                                                  {% for year in range(current_user.admitted_year, year + 1) %}
-                                                  {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
-                                                  <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ year }}년도 {{ semester }}</a></li>
-                                                  {% endfor %}
+                                                  {% for year in range(current_user.admitted_year, current_user.admitted_year + 10) %}
+                                                  <li class="dropstart">
+                                                      <a class="dropdown-item">{{ year }}년도</a>
+                                                      <ul class="submenu dropdown-menu">
+                                                          {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                          <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
+                                                          {% endfor %}
+                                                      </ul>
+                                                  </li>
                                                   {% endfor %}
                                                   <li class="divider"></li>
                                                   <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
