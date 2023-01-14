@@ -1293,7 +1293,7 @@ class User(UserMixin, db.Model):
             if self.department.major == "AE":
                 major_mandatory.append((["AE208", "AE210", "AE220", "AE300", "AE307", "AE330", "AE400"], 0))
                 if self.department.double_major == "":
-                    major_mandatory.append((["AE490", "AE401"]))
+                    major_mandatory.append((["AE490", "AE401"], 1))
             if "AE" in self.department.double_major:
                 major_mandatory.append((["AE208", "AE210", "AE220", "AE300", "AE307", "AE330", "AE400"], 0))
 
