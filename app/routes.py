@@ -46,10 +46,6 @@ def time_stamp():
 @app.route('/index')
 def index():
     if current_user.is_authenticated:
-        if current_user.id == 1:
-            num_users = User.query.count()
-            num_subjects = Course.query.count()
-            return render_template('index.html', n1=num_users, n2=num_subjects)
         if current_user.course_info is None:
             current_user.course_info = "{}"
         if current_user.department is None:
