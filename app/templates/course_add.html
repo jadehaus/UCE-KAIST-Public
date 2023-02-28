@@ -10,12 +10,12 @@
         {% include 'includes/preloader.html' %}
 
         <!-- Hero -->
-        <section class="section-header pb-3 bg-primary text-white">
+        <section class="section-header pb-10 bg-primary text-white">
             <div class="container">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 text-center">
                         <h1 class="display-2 mb-3">과목 추가하기</h1>
-                        <p class="lead mb-5">지금까지 수강한 과목 또는 앞으로 수강할 과목을 추가할 수 있습니다. <br> 간편한 검색 기능과 강력한 학사시스템 불러오기 기능을 활용해보세요.</p>
+                        <p class="lead mb-4">지금까지 수강한 과목 또는 앞으로 수강할 과목을 추가할 수 있습니다.</p>
                         <div class="alert bg-secondary" role="alert">
                             <span class="fas fa-info-circle"></span>
                             또는 <a class="fw-bold text-white text-underline mx-1" data-bs-toggle="modal" data-bs-target="#modal-default" target="_blank">여기</a>에서 강력한 학사시스템 불러오기 기능을 사용해보세요.
@@ -24,35 +24,229 @@
                 </div>
             </div>
         </section>
-        <section class="section section-lg">
-            <div class="container-fluid">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-md-10 text-center">
-                        <div class="input-group">
-                            <input type="text" class="form-control" id="courseName" placeholder="과목 이름, 개설 학과, 과목 코드 등으로 검색 (예: 수리과학과 전공선택)" aria-describedby="basic-addon2">
-                                <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
+        <div class="section section-lg pt-0">
+          <div class="container" id="recommendations">
+              <div class="row mt-n9">
+                  <div class="col-12 col-md-6 col-lg-4 mb-5 mb-lg-0">
+                      <div class="card shadow border-gray-300 py-4">
+                          <div class="card-header text-center border-0 bg-white p-3">
+                              <h2 class="h3 text-primary mb-2">우수평점 기준 추천 과목</h2>
+                              <p class="text-muted"><small><sup>*</sup>아래 점수는 예상 학점입니다.</small></p>
+                          </div>
+                          <div class="card-body">
+                            {% if gpa_rec|length < 1 %}
+                            <div class="text-center">
+                              <p>과목 정보가 없습니다.</p>
+                            </div>
+                            {% endif %}
+                            <ul class="list-group list-group-flush mb-4">
+                              {% for info in gpa_rec %}
+                                {% if info[1] > 4 %}
+                                  {% set pill_color = 'info' %}
+                                {% elif info[1] > 3.5 %}
+                                  {% set pill_color = 'success' %}
+                                {% elif info[1] > 3 %}
+                                  {% set pill_color = 'warning' %}
+                                {% else %}
+                                  {% set pill_color = 'danger' %}
+                                {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ info[0].code }} {{ info[0].name }}
+                                    <span class="badge bg-{{pill_color}} bg-pill">{{ info[1] }}</span>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                            <div class="text-center">
+                              <p class="text-muted"><small><sup>*</sup>상위 5개 과목의 점수입니다.</small></p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4 mb-5 mb-lg-0">
+                      <div class="card shadow border-gray-300 py-4">
+                          <div class="card-header text-center border-0 bg-white p-3">
+                              <h2 class="h3 text-tertiary mb-2">흥미도 기준 추천 과목</h2>
+                              <p class="text-muted"><small><sup>*</sup>아래 점수는 예상 흥미도 입니다. (0 ~ 1)</small></p>
+                          </div>
+                          <div class="card-body">
+                            {% if like_rec|length < 1 %}
+                            <div class="text-center">
+                              <p>과목 정보가 없습니다.</p>
+                            </div>
+                            {% endif %}
+                            <ul class="list-group list-group-flush mb-4">
+                              {% for info in like_rec %}
+                                {% if info[1] > 0.6 %}
+                                  {% set pill_color = 'info' %}
+                                {% elif info[1] > 0.4 %}
+                                  {% set pill_color = 'success' %}
+                                {% elif info[1] > 0.2 %}
+                                  {% set pill_color = 'warning' %}
+                                {% else %}
+                                  {% set pill_color = 'danger' %}
+                                {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ info[0].code }} {{ info[0].name }}
+                                    <span class="badge bg-{{pill_color}} bg-pill">{{ info[1] }}</span>
+                                </li>
+                              {% endfor %}
+                            </ul>
+                            <div class="text-center">
+                              <p class="text-muted"><small><sup>*</sup>상위 5개 과목의 점수입니다.</small></p>
+                            </div>
+                          </div>
+                      </div>
+                  </div>
+
+                  <div class="col-12 col-md-6 col-lg-4 mb-5 mb-lg-0">
+                      <div class="card bg-secondary border-gray-300 py-4">
+                          <div class="card-header text-white text-center border-primary p-3">
+                              <h2 class="h3 text-white mb-2">유사도 기준 추천 과목</h2>
+                              <p class="text-muted"><small><sup>*</sup>아래 점수는 추천 유사도입니다. (0 ~ 1)</small></p>
+                          </div>
+                          <div class="card-body text-white p-4">
+                            {% if grad_rec|length < 1 %}
+                            <div class="text-center">
+                              <p>과목 정보가 없습니다.</p>
+                            </div>
+                            {% endif %}
+                              <ul class="list-group list-group-flush mb-4">
+                                {% for info in grad_rec %}
+                                {% if info[1] > 0.6 %}
+                                  {% set pill_color = 'info' %}
+                                {% elif info[1] > 0.3 %}
+                                  {% set pill_color = 'success' %}
+                                {% elif info[1] > 0.2 %}
+                                  {% set pill_color = 'warning' %}
+                                {% else %}
+                                  {% set pill_color = 'danger' %}
+                                {% endif %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center bg-secondary border-primary text-white">
+                                  {{ info[0].code }} {{ info[0].name }}
+                                    <span class="badge bg-{{pill_color}} bg-pill">{{ info[1] }}</span>
+                                </li>
+                              {% endfor %}
+                              </ul>
+                              <div class="text-center">
+                                <p class="text-muted"><small><sup>*</sup>상위 5개 과목의 점수입니다.</small></p>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <div class="container-fluid">
+          <div class="row justify-content-center">
+              <div class="col-12 col-md-10 text-center">
+                  <div class="alert alert-info alert-dismissible fade show" role="alert">
+                    <span class="fas fa-solid fa-arrow-trend-up me-1"></span>
+                    <strong> Notice: </strong>
+                      매화수의 추천 기능은 날로 성장하고 있습니다. 추천 기능에 관하여 건의하고 싶은 내용은
+                      <a class="text-underline mx-1" href="https://forms.gle/mZ6UoD47ZVY6DzEM8" target="_blank">여기에</a> 제보해 주세요.
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                      <span class="fas fa-solid fa-lightbulb me-1"></span>
+                      <strong> Tip: </strong>
+                      아직 듣지 않았지만 수강 예정인 과목도 직접 추가해보세요. 매화수는 졸업까지 수강 과목 설계를 도와줄 수 있습니다.
+                      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                  <br>
+                  <div class="input-group">
+                      <input type="text" class="form-control" id="courseName" placeholder="과목 이름, 개설 학과, 과목 코드 등으로 검색 (예: 수리과학과 전공선택)" aria-describedby="basic-addon2">
+                          <span class="input-group-text" id="basic-addon2"><span class="fas fa-search"></span></span>
+                  </div>
+                  <br>
+                  <div class="table-responsive-lg">
+                  <table class="table table-hover display nowrap" id="courseTable" style="width:100%" width="100%">
+                      <thead>
+                      <tr>
+                          <th>개설 학과 <span class="fas fa-sort-down"></span></th>
+                          <th>구분 <span class="fas fa-sort-down"></span></th>
+                          <th>코드 <span class="fas fa-sort-down"></span></th>
+                          <th>과목 이름 <span class="fas fa-sort-down"></span></th>
+                          <th>학점 <span class="fas fa-sort-down"></span></th>
+                          <th></th>
+                          <th></th>
+                          <th></th>
+                      </tr>
+                      </thead>
+                  </table>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <br><br><br>
+        <div class="container item hidden">
+            <div class="container">
+                <div class="row justify-content-center align-items-center">
+                    <div class="row justify-content-center mb-5 mb-lg-6">
+                        <div class="col-12 col-lg-6">
+                            <div class="d-flex flex-wrap justify-content-lg-start">
+                                <div class="my-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 me-md-4">
+                                            <div class="icon icon-md icon-secondary-app">
+                                                <span class="fa-solid fa-bold-lightning"</span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="h4">매화수의 가장 강력한 기능, 추천 시스템.</h3>
+                                            <p>
+                                                매화수는 단순히 졸업 요건만을 계산해주는 프로그램이 아닙니다. 매화수의 목표는 사용자가 앞으로 수강할 과목을 쉽게 설계할 수 있도록 도움을 주는 것입니다.
+                                                이러한 수강 과목 추천 시스템은 학교에서 제공하지 못하는, 매화수만의 유일하고 강력한 기능입니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="my-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 me-md-4">
+                                            <div class="icon icon-md icon-secondary-app">
+                                                <span class="fa-solid fa-shield"></span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="h4">사용자의 데이터를 기반으로 만들어진 알고리즘.</h3>
+                                            <p>
+                                                매화수는 사용자의 익명 데이터들을 기반으로 AI 등을 활용한 스마트한 과목 추천 시스템이 탑재되어 있습니다. 매화수에서 사용하는 모든 사용자 데이터는 익명으로 처리됩니다. 
+                                                <a href="/privacy" aria-label="link" class="icon-white me-2">개인정보 보호방침 보러가기.</a>
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="my-4">
+                                    <div class="d-flex">
+                                        <div class="me-3 me-md-4">
+                                            <div class="icon icon-md icon-secondary-app">
+                                                <span class="fa-solid fa-circle-exclamation"></span>
+                                            </div>
+                                        </div>
+                                        <div>
+                                            <h3 class="h4">로드 분석과 위험 요소 분석까지.</h3>
+                                            <p>
+                                                수강할 과목을 추천할 때에는 해당 학기 로드까지 적절히 고려해야 합니다. 또한 선수 과목을 제대로 듣지 않았을 때에도 이를 파악할 수 있어야 합니다. 매화수는 이를 효과적으로 도와줄 수 있습니다.
+                                            </p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <br>
-                        <div class="table-responsive-lg">
-                        <table class="table table-hover display nowrap" id="courseTable" style="width:100%" width="100%">
-                            <thead>
-                            <tr>
-                                <th>개설 학과 <span class="fas fa-sort-down"></span></th>
-                                <th>구분 <span class="fas fa-sort-down"></span></th>
-                                <th>코드 <span class="fas fa-sort-down"></span></th>
-                                <th>과목 이름 <span class="fas fa-sort-down"></span></th>
-                                <th>학점 <span class="fas fa-sort-down"></span></th>
-                                <th></th>
-                                <th></th>
-                                <th></th>
-                            </tr>
-                            </thead>
-                        </table>
+                        <div class="d-flex col-12 col-lg-6 align-items-center justify-content-center">
+                            <img class="d-none d-lg-inline-block" src="static/assets/img/etc/pie_chart.svg" alt="">
                         </div>
                     </div>
+
+                    <div class="col-12 col-md-12 text-center">
+                    <a href="https://forms.gle/mZ6UoD47ZVY6DzEM8"
+                       class="btn btn-outline-gray-100 d-none d-lg-inline me-md-3"><span class="fas fa-bug me-2"></span> 더 많은 의견 제시하기</a>
+                    </div>
+
                 </div>
             </div>
-        </section>
+        </div>
         <button class="btn btn-sm btn-primary" type="button" onclick="topFunction()" id="topBtn" title="Go to top">
             맨 위로
         </button>
@@ -72,16 +266,16 @@
                             <li>학사시스템(https://cais.kaist.ac.kr/grade)에 로그인하여<br> <strong>성적 > 성적조회</strong> 클릭.</li>
                             <li>Chrome의 경우, 화면에서 <strong>마우스 우클릭</strong> 후<br> 가장 아래 보이는 <strong>검사</strong> (페이지 소스보기 아래) 클릭.</li>
                             <li>검사창 가장 위 <strong>console</strong> 창 클릭 후,<br> 아래 코드를 <strong>콘솔 창에 복사 붙여넣기</strong>.</li>
-                                <p><small>let el = document.getElementById("gradeContent");<br>
-                                    let rows = el.querySelectorAll("tr");<br>
-                                    let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
-                                    let ccrows = Array.from(crows).filter(cr => {return ((cr.querySelector("td:nth-of-type(11)").innerText != 'R') && (cr.querySelector("td:nth-of-type(11)").innerText != 'W'));});<br>
-                                    let courses = ccrows.map(cr => {<br>
-                                    return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
-                                            "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
-                                            "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
-                                            "name": cr.querySelector("td:nth-of-type(7)").innerText};});<br>
-                                    console.log(JSON.stringify(courses));</small></p>
+                              <p><small>let el = document.getElementById("gradeContent");<br>
+                                let rows = el.querySelectorAll("tr");<br>
+                                let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
+                                let courses = crows.map(cr => {<br>
+                                return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
+                                        "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
+                                        "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
+                                        "name": cr.querySelector("td:nth-of-type(7)").innerText,<br>
+                                        "letter": cr.querySelector("td:nth-of-type(11)").innerText};});<br>
+                                console.log(JSON.stringify(courses));</small></p>
                             <li>콘솔창 아래 출력된 결과값을 아래 텍스트 상자에 입력하면 현재까지 수강한 과목들이<strong>(재수강 및 드랍 과목 제외)</strong> 성공적으로 반영됩니다.</li>
                         </ol>
                         <strong>&nbsp; *일부 개별연구와 기이수 과목들의 경우(e.g. 한국과학영재학교 자유선택 AP 과목) 반영되지 않을 수 있습니다.</strong>
@@ -99,7 +293,7 @@
 
 <style>
     ul { display: flex; }
-    ul li { margin-left: 20px; }
+    ul li { margin-left: 10px; }
 </style>
 <style>
 .space-below {
@@ -205,7 +399,7 @@ table { min-width: 777px; }
     $(document).ready(function(){
         $("#courseTable").DataTable({
             lengthChange: false,
-            "pageLength": 20,
+            "pageLength": 10,
             searching: true,
             ordering: true,
             info: true,
@@ -256,15 +450,23 @@ table { min-width: 777px; }
             var data = $('#courseTable').DataTable().row( $(this).parents('tr') ).data();
             $(this).removeClass('btn-primary')
             $(this).addClass('btn-white')
+            $(this).closest('tr').find('span').removeClass('fa-check')
+            $(this).closest('tr').find('span').addClass('fa-spinner fa-pulse')
             add_course(data['id']);
             $('#courseTable').DataTable().ajax.reload();
+            $("#recommendations").load(location.href+" #recommendations>*","");
         });
 
 
         $('#courseTable tbody').on('click', '.btn-danger', function (e) {
             var data = $('#courseTable').DataTable().row( $(this).parents('tr') ).data();
+            $(this).removeClass('btn-danger')
+            $(this).addClass('btn-white')
+            $(this).closest('tr').find('span').removeClass('fa-trash')
+            $(this).closest('tr').find('span').addClass('fa-spinner fa-pulse')
             delete_course(data['id']);
             $('#courseTable').DataTable().ajax.reload();
+            $("#recommendations").load(location.href+" #recommendations>*","");
         });
     });
 </script>
@@ -298,6 +500,7 @@ table { min-width: 777px; }
 
         }).done(function(res){
             $("#courseTable").DataTable().ajax.reload();
+            $("#recommendations").load(location.href+" #recommendations>*","");
         });
     }
     function delete_course(id){
@@ -311,6 +514,7 @@ table { min-width: 777px; }
 
         }).done(function(res){
            $("#courseTable").DataTable().ajax.reload();
+           $("#recommendations").load(location.href+" #recommendations>*","");
         });
     }
 </script>

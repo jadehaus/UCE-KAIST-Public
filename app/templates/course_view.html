@@ -4,10 +4,24 @@
 
 
 {% block content %}
-
 <!-- Specific Page CSS goes HERE  -->
 <style>
-
+    #page{
+        display: block;
+    }
+    #loading{
+        display: none;
+    }
+</style>
+<style>
+.card-header .header-toggle:after {
+    font-family: "Font Awesome 5 Free";  
+    content: "\f0d8";
+    float: right; 
+}
+.card-header .header-toggle.collapsed:after {
+    content: "\f0d7"; 
+}
 @media all {
 	.dropdown-menu li{ position: relative; 	}
 	.nav-item .submenu{
@@ -106,12 +120,12 @@ table { min-width: 800px; }
 </style>
 
     <main>
-
+        
         {% include 'includes/preloader.html' %}
 
         <!-- Hero -->
         <section class="section-header pb-3 bg-primary text-white">
-            <div class="container">
+            <div class="container" id="page">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 text-center">
                         <h1 class="display-2 mb-3">수강한 과목 목록</h1>
@@ -123,40 +137,73 @@ table { min-width: 800px; }
                     </div>
                 </div>
             </div>
+            <div class="container" id="loading">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="animated animatedFadeInUp fadeInUp">
+                        <h1 class="fw-bolder display-1">
+                            매화수,
+                        </h1>
+                        <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
+                            불러오는 중입니다. 잠시만 기다려주십시오.
+                        </h2>
+                    </div>
+                </div>
+            </div>
         </section>
         <section class="section section-lg">
-            <div class="modal fade" id="modal-notification" tabindex="-1" role="dialog"
-                aria-labelledby="modal-notification" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content bg-primary text-white">
-                        <div class="modal-header border-0">
-                            <button type="button" class="btn-close bg-gray-500" data-bs-dismiss="modal"
-                                aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body">
-                            <div class="py-3 text-center">
-                                <span class="modal-icon display-1-lg"><span
-                                        class="fas fa-exclamation-circle" style="color: white"></span></span>
-                                <h2 class="h4 modal-title my-3">매화수 알림</h2>
-                                <br>
-                                <p class="px-lg-5">'개별연구'의 등록이 잘 되지 않을 수 있습니다.<br><br>
-                                    특히 학사시스템 불러오기 기능에서 개별연구 과목이 수강한 것보다 더 추가되었거나 덜 추가된 경우, <strong>개별연구 과목을 전체 목록에 여러개 더 추가해 놓았으므로</strong> 직접 '과목 추가하기' 탭에서 추가 또는 삭제를 진행해 주세요.
-                            이용에 불편을 드려 죄송합니다.</p>
-                            </div>
-                        </div>
+            <div class="container-fluid wrapper mb-3">
+                <div class="row justify-content-center content">
+                    <div class="col-12 col-md-6">
+                        <canvas id="lineChart"></canvas>
+                    </div>
+                    <div class="col-12 col-md-4" id="gpa_summary">
+                        {% set gpa_list = current_user.render_gpa() %}
+                        <h5 class="h5 text-center"> 이수 현황 요약 </h5>
+                        <ul class="list-group list-group-flush mb-4">
+                            <li class="list-group-item">
+                                <span class="fas fa-regular fa-calculator"></span>
+                                &nbsp;&nbsp;전체 평균 평점: {{ gpa_list[0] }} / 4.3
+                            </li>
+                            <li class="list-group-item">
+                                <span class="fas fa-regular fa-book"></span>
+                                &nbsp;&nbsp;전체 이수 학점: {{ gpa_list[1] }}
+                            </li>
+                            <br>
+                            <li class="list-group-item">
+                                <span class="fas fa-regular fa-calculator"></span>
+                                &nbsp;&nbsp;전공<sup>*</sup> 평균 평점: {{ gpa_list[2] }} / 4.3
+                            </li>
+                            <li class="list-group-item">
+                                <span class="fas fa-regular fa-book-medical"></span>
+                                &nbsp;&nbsp;전공 이수 학점: {{ gpa_list[3] }}
+                            </li>
+                        </ul>
+                        <p class="text-muted">
+                            <small>&nbsp;&nbsp;<sup>*</sup><a href="{{ url_for('course_analysis') }}">여기에서</a> 선택한 주전공만 고려합니다.</small>
+                        </p>
                     </div>
                 </div>
             </div>
             <div class="container-fluid wrapper">
                 <div class="row justify-content-center content">
                     <div class="col-10 col-md-10 col-lg-10 text-center">
-<!--                        <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="true" aria-controls="collapseExample">-->
-<!--                            <span aria-hidden="false" class="fas fa-calendar-alt"></span>  수강 학기 정보 입력하기-->
-<!--                        </button>-->
-<!--                        <br>-->
+                        <div class="alert alert-primary alert-dismissible fade show" role="alert">
+                            <span class="fas fa-solid fa-lightbulb me-1"></span>
+                            <strong> Tip: </strong>
+                            아직 듣지 않았지만 수강 예정인 과목도 <a class="fw-bold text-underline" href="#" onclick="loading_course_add()">직접 추가해보세요</a>. 매화수는 졸업까지 수강 과목 설계를 도와줄 수 있습니다.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <div class="alert alert-tertiary alert-dismissible fade show" role="alert">
+                            <span class="fas fa-exclamation-circle"></span>
+                            <strong> Note: </strong>
+                            학사시스템에서 불러오기 기능을 사용하신 경우, 잘 등록되지 않은 것이 있는지 꼭 다시 한번 확인해보세요. 
+                            <br>추가되지 않은 것이 있다면 <a class="fw-bold text-underline" href="#" onclick="loading_course_add()">과목 추가하기 탭에서 직접 추가해보세요</a>.
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        </div>
+                        <br>
 
-<!--                        <div class="collapse" id="collapseExample">-->
-<!--                          <div class="well">-->
+                        {% if complete == 0 %}
                         <h4 class="text-primary mb-1">학기 미입력 과목 목록</h4>
                         <div class="table-responsive-lg">
                               <table class="table table-responsive" id="unassigned">
@@ -167,6 +214,7 @@ table { min-width: 800px; }
                                           <th>과목 코드</th>
                                           <th>과목 이름</th>
                                           <th>학점/AU</th>
+                                          <th>평어</th>
                                           <th></th>
                                       </tr>
                                     </thead>
@@ -181,6 +229,18 @@ table { min-width: 800px; }
                                             <td>{{ course.name }}</td>
                                             <td>{{ course.credit }}</td>
                                             <td>
+                                                {% if 'AU' not in course.credit %}
+                                                <select class="form-control form-control-sm" onchange="edit_letter(this, {{course.id}})">
+                                                    <option value="--" disabled {% if course_info[course.id | string]["letter"] == None %} selected {% endif %}>--</option>
+                                                    {% for grade in ['A+', 'A0', 'A-', 'B+', 'B0', 'B-', 'C+', 'C0', 'C-', 'D+', 'D0', 'D-', 'F', 'S', 'U']%}
+                                                    <option value={{grade}} {% if course_info[course.id | string]["letter"] == grade %} selected {% endif %} >{{grade}}</option>
+                                                    {% endfor %}
+                                                </select>
+                                                {% else %}
+                                                -
+                                                {% endif %}
+                                            </td>
+                                            <td>
                                                 <div class="dropdown" data-name='statuses'>
                                                   <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="btndropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport">
                                                       <span aria-hidden="true" class="fas fa-pencil-alt"></span>
@@ -193,17 +253,42 @@ table { min-width: 800px; }
                                                       <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
                                                       {% for year in range(current_user.admitted_year, current_user.admitted_year + 10) %}
                                                       <li class="dropstart">
+                                                          {% if year <= current_year %}
                                                           <a class="dropdown-item">{{ year }}년도</a>
                                                           <ul class="submenu dropdown-menu">
                                                               {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
                                                               <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
                                                               {% endfor %}
                                                           </ul>
+                                                          {% else %}
+                                                          <a class="dropdown-item" style="color: LightGray">{{ year }}년도</a>
+                                                          <ul class="submenu dropdown-menu">
+                                                              {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                              <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
+                                                              {% endfor %}
+                                                          </ul>
+                                                          {% endif %}
                                                       </li>
                                                       {% endfor %}
                                                       <li class="divider"></li>
                                                       <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
                                                   </ul>
+                                                  {% set color = 'outline-info' %}
+                                                  {% set icon = 'fas fa-regular fa-thumbs-up' %}
+                                                  {% if 'rating' in course_info[course.id | string] %}
+                                                      {% set rating = course_info[course.id | string]['rating'] %}
+                                                      {% if rating == 1 %}
+                                                          {% set color = 'info' %}
+                                                          {% set icon = 'fas fa-solid fa-thumbs-up' %}
+                                                      {% elif rating == -1 %}
+                                                          {% set color = 'tertiary' %}
+                                                          {% set icon = 'fas fa-solid fa-thumbs-down' %}
+                                                      {% else %}
+                                                      {% endif %}
+                                                  {% endif %}
+                                                <button class="btn btn-{{color}} btn-sm" type="button" id="tooltip{{course.id | string}}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{course.id}}" data-bs-original-title="본 과목의 선호도를 평가해주세요. 과목 추천 시 반영됩니다." onclick="edit_rating({{course.id}})">
+                                                    <span aria-hidden="true" class="{{icon}}"></span>
+                                                </button>
                                                 </div>
                                             </td>
                                         </tr>
@@ -213,10 +298,8 @@ table { min-width: 800px; }
                                     </tbody>
                                 </table>
                         </div>
-<!--                          </div>-->
-<!--                        </div>-->
-
                         <br>
+                        {% endif %}
 
                         <div id="assigned">
                             {% if semesters == [] %}
@@ -224,8 +307,12 @@ table { min-width: 800px; }
                             {% else %}
 
                             {% for semester in semesters %}
-                            <h4 class="text-primary mb-1">{% if semester == 'AP' %}기이수{% else %} {{ semester[0] }}년도 {{ semester[1] }} {% endif %}</h4>
-                            <div class="table-responsive-lg">
+                            <div class="card-header">
+                                <h4 class="header-toggle text-primary mb-1 collpased" data-toggle="collapse" data-target="#table{{loop.index}}" aria-expanded="true" aria-controls="table{{loop.index}}" data-parent="#assigned">
+                                    {% if semester == 'AP' %}기이수{% else %} {{ semester[0] }}년도 {{ semester[1] }} {% endif %}
+                                </h4>
+                            </div>
+                            <div class="table-responsive-lg" id="table{{loop.index}}">
                             <table class="table table-responsive mb-4">
                                 <thead>
                                   <tr>
@@ -234,6 +321,7 @@ table { min-width: 800px; }
                                       <th>과목 코드</th>
                                       <th>과목 이름</th>
                                       <th>학점/AU</th>
+                                      <th>평어</th>
                                       <th></th>
                                   </tr>
                                 </thead>
@@ -248,6 +336,18 @@ table { min-width: 800px; }
                                         <td>{{ course.name }}</td>
                                         <td>{{ course.credit }}</td>
                                         <td>
+                                            {% if 'AU' not in course.credit %}
+                                            <select class="form-control form-control-sm" onchange="edit_letter(this, {{course.id}})">
+                                                <option value={{None}} {% if course_info[course.id | string]["letter"] == None %} selected {% endif %}>--</option>
+                                                {% for grade in ['A+', 'A0', 'A-', 'B+', 'B0', 'B-', 'C+', 'C0', 'C-', 'D+', 'D0', 'D-', 'F', 'S', 'U'] %}
+                                                <option value={{grade}} {% if course_info[course.id | string]["letter"] == grade %} selected {% endif %} >{{grade}}</option>
+                                                {% endfor %}
+                                            </select>
+                                            {% else %}
+                                            -
+                                            {% endif %}
+                                        </td>
+                                        <td>
                                             <div class="dropdown" data-name='statuses'>
                                               <button class="btn btn-primary btn-sm dropdown-toggle" type="button" id="btndropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-boundary="viewport">
                                                   <span aria-hidden="true" class="fas fa-pencil-alt"></span>
@@ -260,23 +360,58 @@ table { min-width: 800px; }
                                                   <li><a class="dropdown-item" onclick="edit_course('AP', {{ course.id}})">기이수(AP)</a></li>
                                                   {% for year in range(current_user.admitted_year, current_user.admitted_year + 10) %}
                                                   <li class="dropstart">
+                                                      {% if year <= current_year %}
                                                       <a class="dropdown-item">{{ year }}년도</a>
                                                       <ul class="submenu dropdown-menu">
                                                           {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
                                                           <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
                                                           {% endfor %}
                                                       </ul>
+                                                      {% else %}
+                                                      <a class="dropdown-item" style="color: LightGray">{{ year }}년도</a>
+                                                      <ul class="submenu dropdown-menu">
+                                                          {% for semester in ['봄학기', '여름학기', '가을학기', '겨울학기'] %}
+                                                          <li><a class="dropdown-item" onclick="edit_course({{ [year, semester] }}, {{ course.id}})">{{ semester }}</a></li>
+                                                          {% endfor %}
+                                                      </ul>
+                                                      {% endif %}
                                                   </li>
                                                   {% endfor %}
                                                   <li class="divider"></li>
                                                   <li><a class="dropdown-item" onclick="delete_course({{ course.id }})" style="color: OrangeRed">과목 삭제하기</a></li>
                                               </ul>
+                                                {% set color = 'outline-info' %}
+                                                {% set icon = 'fas fa-regular fa-thumbs-up' %}
+                                                {% if 'rating' in course_info[course.id | string] %}
+                                                    {% set rating = course_info[course.id | string]['rating'] %}
+                                                    {% if rating == 1 %}
+                                                        {% set color = 'info' %}
+                                                        {% set icon = 'fas fa-solid fa-thumbs-up' %}
+                                                    {% elif rating == -1 %}
+                                                        {% set color = 'tertiary' %}
+                                                        {% set icon = 'fas fa-solid fa-thumbs-down' %}
+                                                    {% else %}
+                                                    {% endif %}
+                                                {% endif %}
+                                                <button class="btn btn-{{color}} btn-sm" type="button" id="tooltip{{course.id | string}}" data-bs-toggle="tooltip" data-bs-placement="top" title="{{course.id}}" data-bs-original-title="본 과목의 선호도를 평가해주세요. 과목 추천 시 반영됩니다." onclick="edit_rating({{course.id}})">
+                                                    <span aria-hidden="true" class="{{icon}}"></span>
+                                                </button>
                                             </div>
                                         </td>
                                     </tr>
                                     {% endif %}
                                     {% endif %}
                                     {% endfor %}
+                                    <tr>
+                                        <td><strong>소계</strong></td>
+                                        {% set gpa_data = current_user.render_gpa(semester) %}
+                                        <td>
+                                            <strong>{{ gpa_data[0] }}</strong> / 4.3
+                                        </td>
+                                        <td>
+                                            총 {{ gpa_data[1] }} 학점 이수
+                                        </td>
+                                    </tr>
                                 </tbody>
                             </table>
                             </div>
@@ -328,15 +463,181 @@ table { min-width: 800px; }
             </div>
             <!-- End of Modal Content -->
         </section>
+        <style>
+            .hidden {
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s 0.5s, opacity 0.5s linear;
+            }
+            .less-bottom {
+                margin-bottom: -220px;
+            }
+            @keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            @-webkit-keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            .animated {
+                animation-delay: 1s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .fast-animated{
+                animation-delay: 0s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .delay-more {
+              animation-delay: 2s;
+            }
+
+            .animatedFadeInUp {
+                opacity: 0
+            }
+
+            .fadeInUp {
+                opacity: 0;
+                animation-name: fadeInUp;
+                -webkit-animation-name: fadeInUp;
+            }
+            .arrow {
+              text-align: center;
+              margin: 8% 0;
+            }
+            .bounce {
+              -moz-animation: bounce 2s infinite;
+              -webkit-animation: bounce 2s infinite;
+              animation: bounce 2s infinite;
+            }
+            .move-up {
+                top: -100px;
+            }
+
+            @keyframes bounce {
+              0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-30px);
+              }
+              60% {
+                transform: translateY(-15px);
+              }
+            }
+        </style>
 
     </main>
 
+    <script>
+        $(document).ready(function(){
+        });
+        function loading_course_add() {
+            document.getElementById("page").style.display = "none";
+            document.getElementById("loading").style.display = "block";
+            window.location.href="{{ url_for( 'course_add' ) }}";
+        }
+    </script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
 <script>
+    $('[data-bs-toggle="tooltip"]').tooltip()
     $(window).on('load', function() {
         $('#modal-notification').modal('show');
     });
     $(document).ready(function(){
+        get_graph();
         });
+    function get_graph(){
+        let labels = [];
+        let gpa_data = [];
+        let major_data = []
+        $.ajax({
+            url:'/render_graph',
+            type:'POST',
+            contentType:'application/json',
+            data:{semester:'semester', gpa:'gpa', major:'major'},
+            dataType:'json',
+            success: function(data){
+                for (let i=0; i<data.length; i++){
+                    labels.push(data[i].semester);
+                    gpa_data.push(data[i].gpa);
+                    major_data.push(data[i].major);
+                }
+                new Chart(document.getElementById("lineChart"), {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                        label: "학기별 평균 평점",
+                        data: gpa_data,
+                        backgroundColor: [
+                            'rgba(105, 0, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(200, 99, 132, .7)',
+                        ],
+                        borderWidth: 2
+                        },
+                        {
+                        label: "학기별 전공 평점",
+                        data: major_data,
+                        backgroundColor: [
+                            'rgba(0, 137, 132, .2)',
+                        ],
+                        borderColor: [
+                            'rgba(0, 10, 130, .7)',
+                        ],
+                        borderWidth: 2
+                        }
+                        ]
+                    },
+                    options: {
+                        display: true,
+                        responsive: true
+                    }
+                })
+            },
+            error: function(err){
+                console.log(err);
+            }
+        })
+    }
+    function edit_rating(id){
+        $.ajax({
+            url:'/edit_rating',
+            contentType : 'application/json',
+            method:'PUT',
+            data : JSON.stringify({
+                id: id,
+            })
+
+        }).done(function(res){
+            get_graph();
+            $("#unassigned").load(location.href+" #unassigned>*","");
+            $("#assigned").load(location.href+" #assigned>*","");
+        });
+    }
     function edit_course(semester, id){
         $.ajax({
             url:'/edit_course',
@@ -348,9 +649,11 @@ table { min-width: 800px; }
             })
 
         }).done(function(res){
+            get_graph();
             $("#unassigned").load(location.href+" #unassigned>*","");
             $("#assigned").load(location.href+" #assigned>*","");
-
+            $("#lineChart").load(location.href+" #lineChart>*","");
+            $("#gpa_summary").load(location.href+" #gpa_summary>*","");
         });
     }
     function delete_course(id){
@@ -363,9 +666,11 @@ table { min-width: 800px; }
             })
 
         }).done(function(res){
+            get_graph();
             $("#unassigned").load(location.href+" #unassigned>*","");
             $("#assigned").load(location.href+" #assigned>*","");
-
+            $("#lineChart").load(location.href+" #lineChart>*","");
+            $("#gpa_summary").load(location.href+" #gpa_summary>*","");
         });
     }
     function edit_letter(obj, id){
@@ -380,8 +685,10 @@ table { min-width: 800px; }
             })
 
         }).done(function(res){
+            get_graph();
             $("#assigned").load(location.href+" #assigned>*","");
-
+            $("#lineChart").load(location.href+" #lineChart>*","");
+            $("#gpa_summary").load(location.href+" #gpa_summary>*","");
         });
     }
     function quickAdd(){

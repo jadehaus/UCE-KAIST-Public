@@ -4,6 +4,14 @@
 
 {% block content %}
 <style>
+    #page{
+        display: block;
+    }
+    #loading{
+        display: none;
+    }
+</style>
+<style>
 .space-left {
   margin-left: 5px;
 }
@@ -69,7 +77,7 @@ p { margin:0 }
 
         <!-- Hero -->
         <section class="section-header pb-3 bg-primary text-white">
-            <div class="container">
+            <div class="container" id="page">
                 <div class="row justify-content-center">
                     <div class="col-12 col-md-8 text-center">
                         <h1 class="display-2 mb-3">졸업 요건 분석</h1>
@@ -78,6 +86,19 @@ p { margin:0 }
                             <span class="fas fa-info-circle"></span>
                              혹시 요건 계산이 이상하다면, <a class="fw-bold text-white text-underline mx-1" href="https://forms.gle/mZ6UoD47ZVY6DzEM8" target="_blank">여기</a>에 알려주세요. 함께 매화수를 발전시켜보아요.
                         </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container" id="loading">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="animated animatedFadeInUp fadeInUp">
+                        <h1 class="fw-bolder display-1">
+                            매화수,
+                        </h1>
+                        <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
+                            불러오는 중입니다. 잠시만 기다려주십시오.
+                        </h2>
                     </div>
                 </div>
             </div>
@@ -735,8 +756,100 @@ p { margin:0 }
                 </div>
             </div>
         </section>
+        <style>
+            .hidden {
+              visibility: hidden;
+              opacity: 0;
+              transition: visibility 0s 0.5s, opacity 0.5s linear;
+            }
+            .less-bottom {
+                margin-bottom: -220px;
+            }
+            @keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            @-webkit-keyframes fadeInUp {
+                from {
+                    transform: translate3d(0,40px,0)
+                }
+
+                to {
+                    transform: translate3d(0,0,0);
+                    opacity: 1
+                }
+            }
+
+            .animated {
+                animation-delay: 1s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .fast-animated{
+                animation-delay: 0s;
+                animation-duration: 1s;
+                animation-fill-mode: both;
+                -webkit-animation-duration: 1s;
+                -webkit-animation-fill-mode: both
+            }
+            .delay-more {
+              animation-delay: 2s;
+            }
+
+            .animatedFadeInUp {
+                opacity: 0
+            }
+
+            .fadeInUp {
+                opacity: 0;
+                animation-name: fadeInUp;
+                -webkit-animation-name: fadeInUp;
+            }
+            .arrow {
+              text-align: center;
+              margin: 8% 0;
+            }
+            .bounce {
+              -moz-animation: bounce 2s infinite;
+              -webkit-animation: bounce 2s infinite;
+              animation: bounce 2s infinite;
+            }
+            .move-up {
+                top: -100px;
+            }
+
+            @keyframes bounce {
+              0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+              }
+              40% {
+                transform: translateY(-30px);
+              }
+              60% {
+                transform: translateY(-15px);
+              }
+            }
+        </style>
 
     </main>
+    <script>
+        $(document).ready(function(){
+        });
+        function loading_course_add() {
+            document.getElementById("page").style.display = "none";
+            document.getElementById("loading").style.display = "block";
+            window.location.href="{{ url_for( 'course_add' ) }}";
+        }
+    </script>
 
 <script>
     $(document).ready(function(){

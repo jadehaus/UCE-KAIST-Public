@@ -48,6 +48,14 @@
 <link type="text/css" href="/static/assets/css/pixel.css" rel="stylesheet">
 
 </head>
+<style>
+    #page{
+        display: block;
+    }
+    #loading{
+        display: none;
+    }
+</style>
 <body>
 
     {% block body -%}
@@ -65,7 +73,7 @@
 
         <!-- Hero -->
         <section class="section-header overflow-hidden pt-7 pt-lg-8 pb-9 pb-lg-12 bg-primary text-white" style="height: 1%">
-            <div class="container less-bottom">
+            <div class="container less-bottom" id="page">
                 <div class="row">
                     <div class="col-12 text-center">
                         <div class="animated animatedFadeInUp fadeInUp">
@@ -96,7 +104,7 @@
                                 <p class="d-none d-lg-block" align="center" style="margin:30px">학사시스템에 접속한 후 지금까지 수강한 과목을<br> 버튼 클릭 한번으로 추가할 수 있습니다.</p>
                             </div>
                             <div class="col-6 col-md-6 text-center">
-                                <button type="button" onClick="window.location.href='{{ url_for( 'course_add' ) }}';" class="btn btn-tertiary animate-up-2" style="width:220px">
+                                <button type="button" onClick="loading_course_add()" class="btn btn-tertiary animate-up-2" style="width:220px">
                                 과목 직접 추가하기</button>
                                 <br>
                                 <p class="d-none d-lg-block" align="center" style="margin:30px">학점이나 학기 등의 정보를 입력하고 싶지 않은 경우,<br>
@@ -117,7 +125,24 @@
                     </div>
                 </div>
             </div>
-            <figure class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2"><svg class="fill-white"
+            <figure id="page" class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2"><svg class="fill-white"
+                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
+                <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>
+            </svg></figure>
+            <div class="container less-bottom" id="loading">
+                <div class="row">
+                    <div class="col-12 text-center">
+                        <div class="animated animatedFadeInUp fadeInUp">
+                        <h1 class="fw-bolder display-1">
+                            매화수,
+                        </h1>
+                        <h2 class="lead fw-normal text-muted mb-4 px-lg-10">
+                            불러오는 중입니다. 잠시만 기다려주십시오.
+                        </h2>
+                    </div>
+                </div>
+            </div>
+            <figure id="loading" class="position-absolute bottom-0 left-0 w-100 d-none d-md-block mb-n2"><svg class="fill-white"
                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 3000 185.4">
                 <path d="M3000,0v185.4H0V0c496.4,115.6,996.4,173.4,1500,173.4S2503.6,115.6,3000,0z"></path>
             </svg></figure>
@@ -126,7 +151,7 @@
         <section class="section section-lg">
 
 
-            <div class="container item hidden">
+            <div class="container item hidden" id="page">
                 <div class="row justify-content-center mb-5 mb-lg-6">
                     <div class="col-6 col-md-3 text-center mb-4">
                         <div class="icon icon-shape icon-lg bg-white shadow-lg border-light rounded-circle mb-4">
@@ -160,6 +185,77 @@
             </div>
 
             {% if current_user.is_authenticated %}
+
+            <div class="container item hidden">
+                <div class="container">
+                    <div class="row justify-content-center align-items-center">
+                        <div class="row justify-content-center mb-5 mb-lg-6">
+                            <div class="col-12 col-lg-6">
+                                <div class="d-flex flex-wrap justify-content-lg-start">
+                                    <div class="my-4">
+                                        <div class="d-flex">
+                                            <div class="me-3 me-md-4">
+                                                <div class="icon icon-md icon-secondary-app">
+                                                    <span class="fa-solid fa-bold-lightning"</span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="h4">매화수의 가장 강력한 기능, 추천 시스템.</h3>
+                                                <p>
+                                                    매화수는 단순히 졸업 요건만을 계산해주는 프로그램이 아닙니다. 매화수의 목표는 사용자가 앞으로 수강할 과목을 쉽게 설계할 수 있도록 도움을 주는 것입니다.
+                                                    이러한 수강 과목 추천 시스템은 학교에서 제공하지 못하는, 매화수만의 유일하고 강력한 기능입니다.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <div class="d-flex">
+                                            <div class="me-3 me-md-4">
+                                                <div class="icon icon-md icon-secondary-app">
+                                                    <span class="fa-solid fa-shield"></span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="h4">사용자의 데이터를 기반으로 만들어진 알고리즘.</h3>
+                                                <p>
+                                                    매화수는 사용자의 익명 데이터들을 기반으로 AI 등을 활용한 스마트한 과목 추천 시스템이 탑재되어 있습니다. 매화수에서 사용하는 모든 사용자 데이터는 익명으로 처리됩니다. 
+                                                    <a href="/privacy" aria-label="link" class="icon-white me-2">개인정보 보호방침 보러가기.</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="my-4">
+                                        <div class="d-flex">
+                                            <div class="me-3 me-md-4">
+                                                <div class="icon icon-md icon-secondary-app">
+                                                    <span class="fa-solid fa-circle-exclamation"></span>
+                                                </div>
+                                            </div>
+                                            <div>
+                                                <h3 class="h4">로드 분석과 위험 요소 분석까지.</h3>
+                                                <p>
+                                                    수강할 과목을 추천할 때에는 해당 학기 로드까지 적절히 고려해야 합니다. 또한 선수 과목을 제대로 듣지 않았을 때에도 이를 파악할 수 있어야 합니다. 매화수는 이를 효과적으로 도와줄 수 있습니다.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex col-12 col-lg-6 align-items-center justify-content-center">
+                                <img class="d-none d-lg-inline-block" src="static/assets/img/etc/pie_chart.svg" alt="">
+                            </div>
+                        </div>
+    
+                        <div class="col-12 col-md-12 text-center">
+                        <a href="https://forms.gle/mZ6UoD47ZVY6DzEM8"
+                           class="btn btn-outline-gray-100 d-none d-lg-inline me-md-3"><span class="fas fa-bug me-2"></span> 더 많은 의견 제시하기</a>
+                        </div>
+    
+                    </div>
+                </div>
+            </div>
+    
+
             {% else %}
             <div class="container item hidden">
                 <div class="row justify-content-center justify-content-lg-between align-items-center mb-5 mb-lg-6">
@@ -202,7 +298,7 @@
                                         </div>
                                     </div>
                                     <div>
-                                        <h3 class="h4">새롭게 만들어진 웹배전, 매화수</h3>
+                                        <h3 class="h4">새롭게 만들어진 웹버전, 매화수</h3>
                                         <p>
                                         새롭게 웹사이트로 만들어진 매화수는 언제 어디서든 쉽고 간편하게 졸업 요건을 확인할 수 있도록 제작되었습니다. 나아가, 사용자의 익명 데이터들을 기반으로 AI 등을 활용해 스마트한 과목 추천 시스템을 구현할 예정입니다.
                                         </p>
@@ -327,12 +423,12 @@
                                     <p><small>let el = document.getElementById("gradeContent");<br>
                                     let rows = el.querySelectorAll("tr");<br>
                                     let crows = Array.from(rows).filter(r => {return (r.id.length==4 || r.id==='0');});<br>
-                                    let ccrows = Array.from(crows).filter(cr => {return ((cr.querySelector("td:nth-of-type(11)").innerText != 'R') && (cr.querySelector("td:nth-of-type(11)").innerText != 'W'));});<br>
-                                    let courses = ccrows.map(cr => {<br>
+                                    let courses = crows.map(cr => {<br>
                                     return {"year": parseInt(cr.id), "semester": cr.getAttribute("name"),<br>
                                             "course_id": cr.querySelector("td:nth-of-type(3)").innerText,<br>
                                             "code": cr.querySelector("td:nth-of-type(4)").innerText,<br>
-                                            "name": cr.querySelector("td:nth-of-type(7)").innerText};});<br>
+                                            "name": cr.querySelector("td:nth-of-type(7)").innerText,<br>
+                                            "letter": cr.querySelector("td:nth-of-type(11)").innerText};});<br>
                                     console.log(JSON.stringify(courses));</small></p>
                                 <li>콘솔창 아래 출력된 결과값을 아래 텍스트 상자에 입력하면 현재까지 수강한 과목들이<strong>(재수강 및 드랍 과목 제외)</strong> 성공적으로 반영됩니다.</li>
                             </ol>
@@ -347,6 +443,16 @@
                 </div>
             </div>
         </section>
+
+        <script>
+            $(document).ready(function(){
+            });
+            function loading_course_add() {
+                document.getElementById("page").style.display = "none";
+                document.getElementById("loading").style.display = "block";
+                window.location.href="{{ url_for( 'course_add' ) }}";
+            }
+        </script>
 
         <script>
         var $fade =  $(".item");

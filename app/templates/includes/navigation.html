@@ -24,10 +24,9 @@
                     </ul>
                     {% if current_user.is_authenticated %}
                     <ul class="navbar-nav navbar-nav-hover align-items-lg-center">
-                        <li class="nav-item"><a href="{{ url_for('course_add') }}" class="nav-link"> 과목 추가하기 </a></li>
+                        <li class="nav-item"><a href="#" onclick="loading_course_add()" class="nav-link"> 수강 신청하기 </a></li>
                         <li class="nav-item"><a href="{{ url_for('course_view') }}" class="nav-link"> 수강 과목 목록 </a></li>
                         <li class="nav-item"><a href="{{ url_for('course_analysis') }}" class="nav-link"> 졸업 요건 분석 </a></li>
-                        <li class="nav-item"><a href="{{ url_for('techtree') }}" class="nav-link"> 과목 추천 시스템 <span class="badge bg-secondary" >NEW</span> </a></li>
                     </ul>
                     {% endif %}
                 </div>
@@ -47,4 +46,12 @@
             </div>
         </nav>
     </header>
+
+    <script>
+        $(document).ready(function(){
+        });
+        function loading_course_add() {
+                window.location.href="{{ url_for( 'course_add' ) }}";
+            }
+    </script>
 

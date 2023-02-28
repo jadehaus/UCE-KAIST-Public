@@ -50,6 +50,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
+    last_login = db.Column(db.String(64))
 
     admitted_year = db.Column(db.Integer)
     department = db.relationship('Department', backref='user', uselist=False)
@@ -1401,6 +1402,43 @@ class User(UserMixin, db.Model):
                 return False
         return len(self.remaining_courses()[0] + self.remaining_courses()[1]) == 0
 
+    def render_gpa(self, semester='all'):
+        omit = True
+        if self.courses is None:
+            return '-', '-', '-', '-', omit
+        letter_to_grade = {"A+": 4.3, "A0": 4.0, "A-": 3.7, "B+": 3.3, "B0": 3.0, "B-": 2.7,
+                           "C+": 2.3, "C0": 2.0, "C-": 1.7, "D+": 1.3, "D0": 1.0, "D-": 0.7, "F": 0.0}
+        course_info = json.loads(self.course_info)
+        major_code = self.department.major
+        major_code = 'None' if not major_code else major_code
+        credit, gpa, gpa_credit = 0, 0, 0
+        major_gpa, major_credit, major_gpa_credit = 0, 0, 0
+        for course in self.courses:
+            info = course_info[str(course.id)]
+            if 'letter' not in info or 'AU' in course.credit:
+                continue
+            if semester == 'all' or info['semester'] == semester:
+                course_credit = int(course.credit)
+                if info['letter'] in letter_to_grade:
+                    course_letter = letter_to_grade[info['letter']]
+                    gpa += course_letter * course_credit
+                    gpa_credit += course_credit
+                    if '전공' in course.subject_type and major_code in course.code:
+                        major_gpa_credit += course_credit
+                        major_gpa += course_letter * course_credit
+                if info['letter'] not in ['F', 'U', 'R', 'W']:
+                    credit += course_credit
+                    if '전공' in course.subject_type and major_code in course.code:
+                        major_credit += course_credit
+        try:
+            gpa = int(gpa / gpa_credit * 100) / 100
+            major_gpa = int(major_gpa / major_gpa_credit * 100) / 100
+        except ZeroDivisionError:
+            pass
+        if gpa_credit > 0:
+            omit = False
+        return gpa, credit, major_gpa, major_credit, omit
+
     def graduate_percent(self):
         """
         renders graduate percentage until so far.
@@ -1647,6 +1685,9 @@ class Course(db.Model):
     code = db.Column(db.String(32))
     name = db.Column(db.String(200))
     credit = db.Column(db.String(8))
+    description = db.Column(db.Text)
+    prerequisite = db.Column(db.Text)
+
 
     def recognizables(self):
         """
@@ -1655,15 +1696,24 @@ class Course(db.Model):
         -------
         recognizables: list
         """
+        if self.code in ["BS209", "CH213", "BiS438", "BiS622", "MAE633", "MS654", "BS760"]:
+            return ["CBE"]
+
         if self.code in ["ME203", "ME301", "ME312", "ME330", "ME351", "ME420",
-                         "IE363", "CH211", "CH241"]:
+                         "IE363", "CH241"]:
             return ["CE"]
+
+        if self.code in ["CH211"]:
+            return ["CE", "CBE"]
 
         if self.code in ["CH223", "CH325", "BiS335"]:
             return ["BS"]
 
-        if self.code in ["CH221", "CH263"]:
+        if self.code in ["CH263"]:
             return ["CE", "BS"]
+
+        if self.code in ["CH221"]:
+            return ["CE", "BS", "CBE"]
 
         if self.code in ["PH212", "PH221", "PH301", "MAE200", "MAE221", "MAE230", "MAE231",
                          "IE331", "IE341", "IE342", "EE202", "EE204", "PH231", "EE321", "CS206", "CS300"]:
